@@ -22,14 +22,27 @@ import model.ReadPDF;
 
 /**
  * 
- * View.java 
- * The GUI of this App
+ * RunApp.java
+ * The View of this App.
  * 
  * @author Fadi Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.0.0 01/10/2011
+ * @version 1.0.1  06/10/2011
  * @copyright 2011
  * 
+ * TERMS AND CONDITIONS:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 public class View extends JFrame implements ActionListener {
@@ -71,7 +84,7 @@ public class View extends JFrame implements ActionListener {
 //		status.setHorizontalAlignment(JTextField.CENTER);
 		status.setEditable(false);
 //		generate.setEnabled(false);
-		status.setText("LUH-NR\nVersion 1.0.0\n03.10.2011\n--OHNE GEWÄHR--");
+		status.setText("LUH-NR\nVersion 1.0.1\n06.10.2011\n--OHNE GEWÄHR--");
 		status.setForeground(Color.black.darker());
 
 		this.add(status, BorderLayout.CENTER);
@@ -140,7 +153,7 @@ public class View extends JFrame implements ActionListener {
 		JFileChooser c = new JFileChooser();
 		c.setMultiSelectionEnabled(false);
 		c.setAcceptAllFileFilterUsed(false);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF", "pdf");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("QIS Notenspiegel (PDF)", "pdf");
 		c.setFileFilter(filter);
 		// Demonstrate "Open" dialog:
 		int rVal = c.showOpenDialog(View.this);
@@ -151,7 +164,7 @@ public class View extends JFrame implements ActionListener {
 			try {
 				pdf.ReadPDF(getPath());
 //				pdf = new ReadExcel(getPath());
-				this.getStatus().setText("Anzahl gesamte Fächer: "+pdf.getSubjects()+"\nAnzahl benotete Fächer: "+pdf.getSubjectsWithNote()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getEndMark());
+				this.getStatus().setText("Anzahl an bestandenen Fächern: "+pdf.getSubjects()+"\nAnzahl an benoteten Fächern: "+pdf.getSubjectsWithNote()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getEndMark());
 //				this.getStatus().
 				this.getStatus().setForeground(Color.blue.darker());
 //				generate.setEnabled(true);

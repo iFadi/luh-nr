@@ -6,6 +6,31 @@ import java.util.Vector;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 
+/**
+ * 
+ * ReadPDF.java
+ * 
+ * 
+ * @author Fadi Asbih
+ * @email fadi_asbih@yahoo.de
+ * @version 1.0.1  06/10/2011
+ * @copyright 2011
+ * 
+ * TERMS AND CONDITIONS:
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
 public class ReadPDF {
 
 	Vector<String> courses = new Vector();
@@ -71,7 +96,7 @@ public class ReadPDF {
 			String note = courses.elementAt(i).substring(sn,en);
 			String nott = note.replace(',', '.');
 //			System.out.println(courses.elementAt(i).indexOf("PL") > -1);
-			if(!note.contains("BE") && (courses.elementAt(i).indexOf("PL") > -1 || courses.elementAt(i).indexOf("GL") > -1 || courses.elementAt(i).indexOf("WL") > -1)) {
+			if(!note.contains("BE") && getExamArt(courses.elementAt(i))) {
 				fach++;
 				fs++;
 				int sc = courses.elementAt(i).lastIndexOf(".")+13;
@@ -90,7 +115,7 @@ public class ReadPDF {
 //				System.out.println(credit);
 //				System.out.println(courses.elementAt(i));
 			}
-			else if(courses.elementAt(i).indexOf("PL") > -1 || courses.elementAt(i).indexOf("GL") > -1 || courses.elementAt(i).indexOf("WL") > -1){
+			else if(getExamArt(courses.elementAt(i))){
 				fs++;
 				int sc = courses.elementAt(i).lastIndexOf(".")+9;
 				int ec = courses.elementAt(i).lastIndexOf(".")+11;
@@ -126,4 +151,20 @@ public class ReadPDF {
 		this.endMark = endMark;
 	}
 	
+	public boolean getExamArt(String arg) {
+		if(arg.indexOf("SL") > -1)
+			return true;
+		if(arg.indexOf("WL") > -1)
+			return true;
+		if(arg.indexOf("GL") > -1)
+			return true;
+		if(arg.indexOf("PL") > -1)
+			return true;
+		if(arg.indexOf("BA") > -1)
+			return true;
+		if(arg.indexOf("BK") > -1)
+			return true;
+		else
+			return false;
+	}
 }
