@@ -5,7 +5,6 @@ import java.util.Vector;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
-
 /**
  * 
  * ReadPDF.java
@@ -13,8 +12,8 @@ import org.apache.pdfbox.util.PDFTextStripper;
  * 
  * @author Fadi Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.0.1  06/10/2011
- * @copyright 2011
+ * @version 1.1.0  04/02/2012
+ * @copyright 2012
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -33,138 +32,157 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 public class ReadPDF {
 
-	Vector<String> courses = new Vector();
-	private String endMark;
-	private String Credits;
-	private String subjects;
-	private String subjectsWithNote;
-	
-	public String getSubjects() {
-		return subjects;
-	}
+        Vector<String> courses = new Vector();
+        private String endMark;
+        private String Credits;
+        private String subjects;
+        private String subjectsWithNote;
+        
+        public String getSubjects() {
+                return subjects;
+        }
 
-	public void setSubjects(String subjects) {
-		this.subjects = subjects;
-	}
+        public void setSubjects(String subjects) {
+                this.subjects = subjects;
+        }
 
-	public String getSubjectsWithNote() {
-		return subjectsWithNote;
-	}
+        public String getSubjectsWithNote() {
+                return subjectsWithNote;
+        }
 
-	public void setSubjectsWithNote(String subjectsWithNote) {
-		this.subjectsWithNote = subjectsWithNote;
-	}
+        public void setSubjectsWithNote(String subjectsWithNote) {
+                this.subjectsWithNote = subjectsWithNote;
+        }
 
-	public String getCredits() {
-		return Credits;
-	}
+        public String getCredits() {
+                return Credits;
+        }
 
-	public void setCredits(String credits) {
-		Credits = credits;
-	}
+        public void setCredits(String credits) {
+                Credits = credits;
+        }
 
-	public ReadPDF() {
-		
-	}
-	
-	public void ReadPDF(String file) throws Exception {
-		PDDocument pddDocument=PDDocument.load(new File(file));
-		PDFTextStripper textStripper=new PDFTextStripper();
-//		System.out.println(textStripper.getText(pddDocument));
-		
-		double not=0;
-		double sumCredit = 0;
-		double s=0;
-		double s1=0;
-		double s2=0;
-		double sumcredit = 0;
-		int fach=0;
-		int fs=0;
-		String x = textStripper.getText(pddDocument);
-		String[] lines = getLines(x);
-		for(int i=0; i<lines.length; i++) {
-			if(lines[i].contains("BE") && lines[i].contains(".")) {
-				courses.addElement(lines[i]);
-			}
-		}
-		
-		for(int i=0; i<courses.size(); i++) {
-			int sn = courses.elementAt(i).lastIndexOf(".")+6;
-			int en = courses.elementAt(i).lastIndexOf(".")+9;
-			
-//			System.out.println(s+" "+e);
-			String note = courses.elementAt(i).substring(sn,en);
-			String nott = note.replace(',', '.');
-//			System.out.println(courses.elementAt(i).indexOf("PL") > -1);
-			if(!note.contains("BE") && getExamArt(courses.elementAt(i))) {
-				fach++;
-				fs++;
-				int sc = courses.elementAt(i).lastIndexOf(".")+13;
-				int ec = courses.elementAt(i).lastIndexOf(".")+15;
-				String credit = courses.elementAt(i).substring(sc,ec);
+        public ReadPDF() {
+                
+        }
+        
+        public void ReadPDF(String file) throws Exception {
+                PDDocument pddDocument=PDDocument.load(new File(file));
+                PDFTextStripper textStripper=new PDFTextStripper();
+//              System.out.println(textStripper.getText(pddDocument));
+                
+                double not=0;
+                double sumCredit = 0;
+                double s=0;
+                double s1=0;
+                double sumcredit = 0;
+                int rankedSubjects=0;
+                int subjects=0;
+                String x = textStripper.getText(pddDocument);
+                String[] lines = getLines(x);
+                
+                // find all passed rankedSubjects and save them in a Vector.
+                for(int i=0; i<lines.length; i++) {
+                        if(lines[i].contains("BE")) {
+                                courses.addElement(lines[i]);
+                        }
+                }
+                
+                for(int i=0; i<courses.size(); i++) {
+                        
+                        // first Check if the line is an Exam.
+                        if(isExam(courses, i)) {
+                                
+                                // second Check if the Exam is rated.
+                                if(isRated(courses, i)) {
+                                        
+                                        // Get the mark of the Subject.
+                                        String mark = getMark(courses, i);
+                                        // Count the number of the rankedSubjects.
+                                        rankedSubjects++;
+                                        // Count the number of the Subjects.
+                                        subjects++;
+                                        // Get the Credit Points of the Subject.
+                                        String credit = getCredit(courses, i);
+                                        
+                                        not = Double.parseDouble(mark);
+                                        sumCredit = Double.parseDouble(credit);
+                                
+                                        s1 = s1 + not*sumCredit;
+                                        s = s + sumCredit;
+                                        sumcredit = sumcredit + sumCredit;
+                                        
+                                        // Debug
+                                        System.out.println("Note: "+mark);
+                                        System.out.println("Credit: " + credit);
+                                        System.out.println(courses.elementAt(i));
+                                }
+                                else { // Not Rated Exams.
+                                        subjects++;
+                                        String credit = getCredit(courses, i);
+                                        sumCredit = Double.parseDouble(credit);
+                                        sumcredit = sumcredit + sumCredit;
+                                }
+                        }
+                }
+                
+                
+                setEndMark(s1/s+"");
+                setCredits((int)sumcredit+"");
+                setSubjects(subjects+"");
+                setSubjectsWithNote(rankedSubjects+"");
+                pddDocument.close();    
+        }
+        
+        public String[] getLines(String input) {
+                String[] lines = input.split("\n");
+                return lines;
+        }
 
-				not = Double.parseDouble(nott);
-				sumCredit = Double.parseDouble(credit);
-				
-				s1 = s1 + not*sumCredit;
-				s = s + sumCredit;
-				
-				sumcredit = sumcredit + sumCredit;
-//				
-//				System.out.println(not);
-//				System.out.println(credit);
-//				System.out.println(courses.elementAt(i));
-			}
-			else if(getExamArt(courses.elementAt(i))){
-				fs++;
-				int sc = courses.elementAt(i).lastIndexOf(".")+9;
-				int ec = courses.elementAt(i).lastIndexOf(".")+11;
-				String credit = courses.elementAt(i).substring(sc,ec);
-				sumCredit = Double.parseDouble(credit);
-				sumcredit = sumcredit + sumCredit;
-//				System.out.println(credit);
-//				System.out.println(courses.elementAt(i));
-			}
-		}
-		setEndMark(s1/s+"");
-		setCredits((int)sumcredit+"");
-		setSubjects(fs+"");
-		setSubjectsWithNote(fach+"");
-//		System.out.println((int)sumcredit);
-		pddDocument.close();
-		
-//		System.out.println(s1/s);
-		
-		
-	}
-	
-	public String[] getLines(String input) {
-		String[] lines = input.split("\n");
-		return lines;
-	}
+        public String getEndMark() {
+                return endMark;
+        }
 
-	public String getEndMark() {
-		return endMark;
-	}
+        public void setEndMark(String endMark) {
+                this.endMark = endMark;
+        }
+        
+        public boolean isExam(Vector<String> vector, int index) {
+                if(vector.elementAt(index).indexOf("PL") > -1)
+                        return true;
+                if(vector.elementAt(index).indexOf("SL") > -1)
+                        return true;
+                if(vector.elementAt(index).indexOf("WL") > -1)
+                        return true;
+                if(vector.elementAt(index).indexOf("PR") > -1)
+                        return true;
+                else
+                        return false;
+        }
+        
+        public boolean isRated(Vector<String> vector, int index) {
+                if(vector.elementAt(index).contains(","))
+                        return true;
+                else
+                        return false;
+        }
+        
+        public String getCredit(Vector<String> vector, int index) {
+                int startCreditPosition = vector.elementAt(index).lastIndexOf("BE")+3;
+                int endCreditPosition = vector.elementAt(index).lastIndexOf("BE")+5;
+                String credit = vector.elementAt(index).substring(startCreditPosition,endCreditPosition);
+                
+                return credit;
+        }
+        
+        public String getMark(Vector<String> vector, int index) {
+                // find the start & end mark position of the Exam.
+                int startMarkPosition = vector.elementAt(index).lastIndexOf("B")-4;
+                int endMarkPosition = vector.elementAt(index).lastIndexOf("B")-1;
 
-	public void setEndMark(String endMark) {
-		this.endMark = endMark;
-	}
-	
-	public boolean getExamArt(String arg) {
-		if(arg.indexOf("SL") > -1)
-			return true;
-		if(arg.indexOf("WL") > -1)
-			return true;
-		if(arg.indexOf("GL") > -1)
-			return true;
-		if(arg.indexOf("PL") > -1)
-			return true;
-		if(arg.indexOf("BA") > -1)
-			return true;
-		if(arg.indexOf("BK") > -1)
-			return true;
-		else
-			return false;
-	}
+                // Replace the Comma with a dot in order to be able to calculate.
+                String mark = vector.elementAt(index).substring(startMarkPosition,endMarkPosition).replace(',', '.');
+                return mark;
+        }
+        
 }

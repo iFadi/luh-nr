@@ -22,7 +22,7 @@ import model.ReadPDF;
 
 /**
  * 
- * View.java
+ * UpdateView.java
  * 
  * 
  * @author Fadi Asbih
@@ -45,7 +45,7 @@ import model.ReadPDF;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-public class View extends JFrame implements ActionListener {
+public class UpdateView extends JFrame implements ActionListener {
 
         /**
          * 
@@ -62,7 +62,7 @@ public class View extends JFrame implements ActionListener {
         private ReadPDF pdf;
         public Desktop d;
 
-        public View(ReadPDF pdf) throws Exception {
+        public UpdateView(ReadPDF pdf) throws Exception {
                 this.pdf = pdf;
 
                 this.setTitle("LUH Notenspiegel Rechner");
@@ -72,23 +72,23 @@ public class View extends JFrame implements ActionListener {
                 panel.setLayout(new BorderLayout());
                 this.add(panel, BorderLayout.NORTH);
                 this.pack();
-                this.setSize(280, 180);
+                this.setSize(250, 180);
 //              this.setLocation(500, 100);
 
                 open = new JButton("Open");
 //              generate = new JButton("Generate XML");
                 exit = new JButton("Exit");
-                bug = new JButton("Bug/Issue Report");
+                bug = new JButton("DOWNLOAD NOW");
                 status = new JTextArea(2, 10);
 //              status = new JTextArea(6, 20);
 //              status.setHorizontalAlignment(JTextField.CENTER);
                 status.setEditable(false);
 //              generate.setEnabled(false);
-                status.setText("LUH-NR\nVersion 1.1.0\n04.02.2012");
+                status.setText("NEW VERSION IS AVAILABLE");
                 status.setForeground(Color.black.darker());
 
                 this.add(status, BorderLayout.CENTER);
-                panel.setBorder(new TitledBorder("Notenspiegel wählen: "));
+                panel.setBorder(new TitledBorder("Notenspiegel wählen: "));
 //              panel.add(generate);
                 panel.add(open);
 //              panel.add(bug);
@@ -119,25 +119,25 @@ public class View extends JFrame implements ActionListener {
                 if (e.getActionCommand().equals("Exit")) {
                         System.exit(0);
                 }
-                if (e.getActionCommand().equals("Bug/Issue Report")) {
-                                try {
-                                         
-                                                URI u;
-                                                d = Desktop.getDesktop();
-                                                u = new URI("http://code.google.com/p/luh-nr/issues/list");
-                                                d.browse(u); 
-                                        
-                                } catch (URISyntaxException e1) {
-                                        // TODO Auto-generated catch block
-                                        e1.printStackTrace();
-                                        this.getStatus().setText("ERROR");
-                                        this.getStatus().setForeground(Color.red.darker());
-                                } catch (IOException e2) {
-                                        // TODO Auto-generated catch block
-                                        e2.printStackTrace();
-                                        this.getStatus().setText("ERROR");
-                                        this.getStatus().setForeground(Color.red.darker());
-                                }
+                if (e.getActionCommand().equals("DOWNLOAD NOW")) {
+                        try {
+                                 
+                                URI u;
+                                d = Desktop.getDesktop();
+                                u = new URI("http://code.google.com/p/luh-nr/downloads/list");
+                                d.browse(u); 
+                        
+                } catch (URISyntaxException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                        this.getStatus().setText("ERROR");
+                        this.getStatus().setForeground(Color.red.darker());
+                } catch (IOException e2) {
+                        // TODO Auto-generated catch block
+                        e2.printStackTrace();
+                        this.getStatus().setText("ERROR");
+                        this.getStatus().setForeground(Color.red.darker());
+                }
                 }
         }
 
@@ -156,7 +156,7 @@ public class View extends JFrame implements ActionListener {
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF", "pdf");
                 c.setFileFilter(filter);
                 // Demonstrate "Open" dialog:
-                int rVal = c.showOpenDialog(View.this);
+                int rVal = c.showOpenDialog(UpdateView.this);
                 if (rVal == JFileChooser.APPROVE_OPTION) {
                         filename = c.getSelectedFile().getName();
                         dir = c.getCurrentDirectory().toString();
@@ -164,7 +164,7 @@ public class View extends JFrame implements ActionListener {
                         try {
                                 pdf.ReadPDF(getPath());
 //                              pdf = new ReadExcel(getPath());
-                                this.getStatus().setText("Anzahl gesamte Fächer: "+pdf.getSubjects()+"\nAnzahl benotete Fächer: "+pdf.getSubjectsWithNote()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getEndMark());
+                                this.getStatus().setText("Anzahl gesamte Fächer: "+pdf.getSubjects()+"\nAnzahl benotete Fächer: "+pdf.getSubjectsWithNote()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getEndMark());
 //                              this.getStatus().
                                 this.getStatus().setForeground(Color.blue.darker());
 //                              generate.setEnabled(true);

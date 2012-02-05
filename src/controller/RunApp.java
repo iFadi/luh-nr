@@ -1,17 +1,18 @@
 package controller;
 
 import model.ReadPDF;
+import model.UpdateNotifier;
+import view.UpdateView;
 import view.View;
-
 /**
  * 
  * RunApp.java
- * The Main Class to Start the App.
+ * 
  * 
  * @author Fadi Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.0.1  06/10/2011
- * @copyright 2011
+ * @version 1.1.0  04/02/2012
+ * @copyright 2012
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -29,10 +30,21 @@ import view.View;
  * 
  */
 public class RunApp {
-	
-	public static void main(String[] args) throws Exception {
-		ReadPDF pdf = new ReadPDF();
-		View view = new View(pdf);
-	}
+        
+        public static void main(String[] args) throws Exception {
+                ReadPDF pdf = new ReadPDF();
+                
+                /**Notifiy if Update is available **/
+                UpdateNotifier un = new UpdateNotifier();
+                
+                if(un.IsNewVersionAvailable()) {
+                        /** Load The Update View **/
+                        UpdateView av = new UpdateView(pdf);
+                }
+                else {
+                        /** Load The App View **/
+                        View view = new View(pdf);
+                }       
+        }
 
 }
