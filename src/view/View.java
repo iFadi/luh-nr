@@ -164,7 +164,7 @@ public class View extends JFrame implements ActionListener {
                         try {
                                 pdf.ReadPDF(getPath());
 //                              pdf = new ReadExcel(getPath());
-                                this.getStatus().setText("Anzahl gesamte Fächer: "+pdf.getSubjects()+"\nAnzahl benotete Fächer: "+pdf.getSubjectsWithNote()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getEndMark());
+                                this.getStatus().setText("Anzahl gesamte Fächer: "+pdf.getSubjects()+"\nAnzahl benotete Fächer: "+pdf.getSubjectsWithNote()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getEndMark());
 //                              this.getStatus().
                                 this.getStatus().setForeground(Color.blue.darker());
 //                              generate.setEnabled(true);
