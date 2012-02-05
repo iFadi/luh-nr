@@ -69,7 +69,6 @@ public class ReadPDF {
         public void ReadPDF(String file) throws Exception {
                 PDDocument pddDocument=PDDocument.load(new File(file));
                 PDFTextStripper textStripper=new PDFTextStripper();
-//              System.out.println(textStripper.getText(pddDocument));
                 
                 double not=0;
                 double sumCredit = 0;
@@ -113,15 +112,19 @@ public class ReadPDF {
                                         sumcredit = sumcredit + sumCredit;
                                         
                                         // Debug
-                                        System.out.println("Note: "+mark);
-                                        System.out.println("Credit: " + credit);
-                                        System.out.println(courses.elementAt(i));
+//                                        System.out.println("Note: "+mark);
+//                                        System.out.println("Credit: " + credit);
+//                                        System.out.println(courses.elementAt(i));
                                 }
                                 else { // Not Rated Exams.
                                         subjects++;
                                         String credit = getCredit(courses, i);
                                         sumCredit = Double.parseDouble(credit);
                                         sumcredit = sumcredit + sumCredit;
+                                        
+                                        // Debug
+//                                        System.out.println("Credit: " + credit);
+//                                        System.out.println(courses.elementAt(i));
                                 }
                         }
                 }
@@ -156,6 +159,8 @@ public class ReadPDF {
                         return true;
                 if(vector.elementAt(index).indexOf("PR") > -1)
                         return true;
+                if(vector.elementAt(index).indexOf("GL") > -1)
+                    return true;
                 else
                         return false;
         }
