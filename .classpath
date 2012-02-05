@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="/Users/fadi/Downloads/pdfbox-1.6.0.jar"/>
+	<classpathentry kind="lib" path="/Users/fadi/Downloads/poi-3.7/lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="/Users/fadi/Sites/ILIAS/ILIAS_4_2_x/Services/WebServices/RPC/lib/jars/pdfbox-1.6.0/fontbox-1.6.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
