@@ -1,8 +1,11 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,12 +14,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
+import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import net.iharder.dnd.FileDrop;
 
 import model.ReadPDF;
 
@@ -25,9 +34,9 @@ import model.ReadPDF;
  * View.java
  * 
  * 
- * @author Fadi Asbih
+ * @author Fadi M.H.Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.1.0  04/02/2012
+ * @version 1.2.0  04/02/2012
  * @copyright 2012
  * 
  * TERMS AND CONDITIONS:
@@ -51,74 +60,85 @@ public class View extends JFrame implements ActionListener {
          * 
          */
         private static final long serialVersionUID = 6177350218996491783L;
-        private JButton open;
-        private JButton generate;
-        private JButton exit;
         private JButton bug;
-        private JTextArea status;
-        private String filename;
-        private String dir;
+        private JEditorPane status;
         private String path;
         private ReadPDF pdf;
+        public JProgressBar progressBar;
         public Desktop d;
+        
+        private InputPanel ip;
 
-        public View(ReadPDF pdf) throws Exception {
-                this.pdf = pdf;
+        public View(final ReadPDF pdf) throws Exception {
+                this.setPdf(pdf);
 
                 this.setTitle("LUH Notenspiegel Rechner");
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-                JPanel panel = new JPanel();
+                
+                JPanel panel = new JPanel(); //Main Panel
+                
+                ip = new InputPanel(this, pdf);
+                
                 panel.setLayout(new BorderLayout());
-                this.add(panel, BorderLayout.NORTH);
+                panel.add(ip, BorderLayout.NORTH);
+                
+                this.add(panel);
                 this.pack();
-                this.setSize(280, 180);
-//              this.setLocation(500, 100);
-
-                open = new JButton("Open");
-//              generate = new JButton("Generate XML");
-                exit = new JButton("Exit");
-                bug = new JButton("Bug/Issue Report");
-                status = new JTextArea(2, 10);
-//              status = new JTextArea(6, 20);
-//              status.setHorizontalAlignment(JTextField.CENTER);
+                this.setSize(310, 230);
+                          
+                // Output
+                bug = new JButton();
+                progressBar = new JProgressBar();
+                status = new JEditorPane();
                 status.setEditable(false);
-//              generate.setEnabled(false);
-                status.setText("LUH-NR\nVersion 1.1.0\n04.02.2012");
+                status.setText(" Notenspiegel einfach hier ziehen geht auch :-)\n\n LUH-NR\n Version 1.2.0\n 04.02.2012");
                 status.setForeground(Color.black.darker());
-
-                this.add(status, BorderLayout.CENTER);
-                panel.setBorder(new TitledBorder("Notenspiegel wählen: "));
-//              panel.add(generate);
-                panel.add(open);
-//              panel.add(bug);
-                this.add(bug, BorderLayout.SOUTH);
-                panel.add(exit);
-                panel.setLayout(new GridLayout(1, 2));
+                panel.add(status);
+                panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
 
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 this.setLocationRelativeTo(null);
                 this.setResizable(false);
 
-                panel.setVisible(true);
+                
                 this.setVisible(true);
-
-//              generate.addActionListener(this);
-                open.addActionListener(this);
-                exit.addActionListener(this);
                 bug.addActionListener(this);
                 
                 if(!d.isDesktopSupported())
                         bug.setEnabled(false);
+                
+                //TESTING Drag n Drop
+                new  FileDrop(panel, new FileDrop.Listener()
+                {   public void  filesDropped( java.io.File[] files )
+                    {   
+                	setPath(files[0].getAbsolutePath());
+                	try {
+						pdf.ReadPDF(getPath());
+						getStatus().setText(
+							 " "+ pdf.getSubject()+
+							 "\n " + pdf.getCertificate()+
+							 "\n Anzahl gesamte Fächer: "+pdf.getNumberOfSubjects()+
+       						 "\n Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+
+       						 "\n Credit Points: "+pdf.getCredits()+
+       						 "\n Note: "+pdf.getFinalGrade()+
+       						 "\n Abschlussarbeit starten: "+pdf.getStartThesis()+
+       						 "\n Studium Geschafft in Prozent... ");
+
+						getStatus().setForeground(Color.black.darker());
+						progressBar.setIndeterminate(false);
+						progressBar.setValue((int)pdf.getProcent());
+						progressBar.setStringPainted(true);
+					} catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                        getStatus().setText("ERROR");
+                        getStatus().setForeground(Color.red.darker());
+					}
+                    }   // end filesDropped
+                }); // end F
         }
 
         public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equals("Open")) {
-                        this.Browse();
-                }
-                if (e.getActionCommand().equals("Exit")) {
-                        System.exit(0);
-                }
                 if (e.getActionCommand().equals("Bug/Issue Report")) {
                                 try {
                                          
@@ -141,43 +161,6 @@ public class View extends JFrame implements ActionListener {
                 }
         }
 
-        public String getFileNameWithoutExtension(String file) {
-                int index = file.lastIndexOf('.');
-                if (index > 0 && index <= file.length() - 2) {
-                        return file.substring(0, index);
-                }
-                return file.substring(0, index);
-        }
-        
-        public void Browse() {
-                JFileChooser c = new JFileChooser();
-                c.setMultiSelectionEnabled(false);
-                c.setAcceptAllFileFilterUsed(false);
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF", "pdf");
-                c.setFileFilter(filter);
-                // Demonstrate "Open" dialog:
-                int rVal = c.showOpenDialog(View.this);
-                if (rVal == JFileChooser.APPROVE_OPTION) {
-                        filename = c.getSelectedFile().getName();
-                        dir = c.getCurrentDirectory().toString();
-                        setPath(dir + "/" + filename);
-                        try {
-                                pdf.ReadPDF(getPath());
-//                              pdf = new ReadExcel(getPath());
-                                this.getStatus().setText("Anzahl gesamte Fächer: "+pdf.getSubjects()+"\nAnzahl benotete Fächer: "+pdf.getSubjectsWithNote()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getEndMark());
-//                              this.getStatus().
-                                this.getStatus().setForeground(Color.blue.darker());
-//                              generate.setEnabled(true);
-                        } catch (Exception e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                                this.getStatus().setText("ERROR");
-                                this.getStatus().setForeground(Color.red.darker());
-                        }
-                        // System.out.println(dir+"/"+filename);
-                }
-        }
-        
         public String getPath() {
                 return path;
         }
@@ -186,11 +169,19 @@ public class View extends JFrame implements ActionListener {
                 this.path = path;
         }
         
-        public JTextArea getStatus() {
+        public JEditorPane getStatus() {
                 return status;
         }
 
-        public void setStatus(JTextArea status) {
+        public void setStatus(JEditorPane status) {
                 this.status = status;
         }
+
+		public ReadPDF getPdf() {
+			return pdf;
+		}
+
+		public void setPdf(ReadPDF pdf) {
+			this.pdf = pdf;
+		}
 }

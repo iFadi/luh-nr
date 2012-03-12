@@ -1,6 +1,7 @@
 package model;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.Vector;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -10,9 +11,9 @@ import org.apache.pdfbox.util.PDFTextStripper;
  * ReadPDF.java
  * 
  * 
- * @author Fadi Asbih
+ * @author Fadi M.H.Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.1.0  04/02/2012
+ * @version 1.2.0  04/02/2012
  * @copyright 2012
  * 
  * TERMS AND CONDITIONS:
@@ -33,33 +34,37 @@ import org.apache.pdfbox.util.PDFTextStripper;
 public class ReadPDF {
 
         Vector<String> courses = new Vector();
-        private String endMark;
-        private String Credits;
-        private String subjects;
-        private String subjectsWithNote;
+        private String finalGrade;
+        private String credits;
+        private String numberOfSubjects;
+        private String numberOfSubjectsWithGrade;
+        private String startThesis;
+        private String subject;
+        private String certificate;
+        private double procent;
         
-        public String getSubjects() {
-                return subjects;
+        public String getNumberOfSubjects() {
+                return numberOfSubjects;
         }
 
-        public void setSubjects(String subjects) {
-                this.subjects = subjects;
+        public void setNumberOfSubjects(String numberOfSubjects) {
+                this.numberOfSubjects = numberOfSubjects;
         }
 
-        public String getSubjectsWithNote() {
-                return subjectsWithNote;
+        public String getNumberOfSubjectsWithGrade() {
+                return numberOfSubjectsWithGrade;
         }
 
-        public void setSubjectsWithNote(String subjectsWithNote) {
-                this.subjectsWithNote = subjectsWithNote;
+        public void setNumberOfSubjectsWithGrade(String numberOfSubjectsWithGrade) {
+                this.numberOfSubjectsWithGrade = numberOfSubjectsWithGrade;
         }
 
         public String getCredits() {
-                return Credits;
+                return credits;
         }
 
         public void setCredits(String credits) {
-                Credits = credits;
+                this.credits = credits;
         }
 
         public ReadPDF() {
@@ -70,23 +75,33 @@ public class ReadPDF {
                 PDDocument pddDocument=PDDocument.load(new File(file));
                 PDFTextStripper textStripper=new PDFTextStripper();
                 
+                this.setStartThesis("noch nicht mšglich");
+                
                 double not=0;
                 double sumCredit = 0;
                 double s=0;
                 double s1=0;
                 double sumcredit = 0;
-                int rankedSubjects=0;
-                int subjects=0;
+                int rankednumberOfSubjects=0;
+                int numberOfSubjects=0;
+                DecimalFormat df = new DecimalFormat("0.00");
                 String x = textStripper.getText(pddDocument);
                 String[] lines = getLines(x);
                 
-                // find all passed rankedSubjects and save them in a Vector.
+                // find all passed rankedNumberOfSubjects and save them in a Vector.
                 for(int i=0; i<lines.length; i++) {
-                        if(lines[i].contains("BE")) {
-                                courses.addElement(lines[i]);
-                        }
+//                	System.out.println(lines[i]);
+                	if(lines[i].contains("Fach:")) {
+                		setSubject(lines[i]);
+                	}
+                	if(lines[i].contains("Abschluss:")) {
+                		setCertificate(lines[i]);
+                	}
+                	if(lines[i].contains("BE")) {
+                		courses.addElement(lines[i]);
+                    }
                 }
-                
+//                System.out.println(getSubject() +" "+getCertificate());
                 for(int i=0; i<courses.size(); i++) {
                         
                         // first Check if the line is an Exam.
@@ -97,10 +112,10 @@ public class ReadPDF {
                                         
                                         // Get the mark of the Subject.
                                         String mark = getMark(courses, i);
-                                        // Count the number of the rankedSubjects.
-                                        rankedSubjects++;
-                                        // Count the number of the Subjects.
-                                        subjects++;
+                                        // Count the number of the rankednumberOfSubjects.
+                                        rankednumberOfSubjects++;
+                                        // Count the number of the numberOfSubjects.
+                                        numberOfSubjects++;
                                         // Get the Credit Points of the Subject.
                                         String credit = getCredit(courses, i);
                                         
@@ -117,7 +132,7 @@ public class ReadPDF {
 //                                        System.out.println(courses.elementAt(i));
                                 }
                                 else { // Not Rated Exams.
-                                        subjects++;
+                                        numberOfSubjects++;
                                         String credit = getCredit(courses, i);
                                         sumCredit = Double.parseDouble(credit);
                                         sumcredit = sumcredit + sumCredit;
@@ -128,12 +143,23 @@ public class ReadPDF {
                                 }
                         }
                 }
-                
-                
-                setEndMark(s1/s+"");
+                                
+                setFinalGrade(df.format(s1/s)+"");
                 setCredits((int)sumcredit+"");
-                setSubjects(subjects+"");
-                setSubjectsWithNote(rankedSubjects+"");
+                setNumberOfSubjects(numberOfSubjects+"");
+                
+                if(getCertificate().contains("Master")) {
+                	setProcent((sumcredit/120)*100);
+                	if((int)sumcredit >= 75)
+                		this.setStartThesis("mšglich");
+                }
+                else if(getCertificate().contains("Bachelor")) {
+                	setProcent((sumcredit/180)*100);
+                	if((int)sumcredit >= 140) 
+                		this.setStartThesis("mšglich");
+                }
+              
+                setNumberOfSubjectsWithGrade(rankednumberOfSubjects+"");
                 pddDocument.close();    
         }
         
@@ -142,14 +168,21 @@ public class ReadPDF {
                 return lines;
         }
 
-        public String getEndMark() {
-                return endMark;
+        public String getFinalGrade() {
+                return finalGrade;
         }
 
-        public void setEndMark(String endMark) {
-                this.endMark = endMark;
+        public void setFinalGrade(String finalGrade) {
+                this.finalGrade = finalGrade;
         }
         
+        /**
+         * check if the Parsed lines are Exams, not i.e. Titles or adresses.
+         * 
+         * @param vector
+         * @param index
+         * @return
+         */
         public boolean isExam(Vector<String> vector, int index) {
                 if(vector.elementAt(index).indexOf("PL") > -1)
                         return true;
@@ -164,7 +197,13 @@ public class ReadPDF {
                 else
                         return false;
         }
-        
+        /**
+         * check if the Exam is a rated or not.
+         * 
+         * @param vector
+         * @param index
+         * @return
+         */
         public boolean isRated(Vector<String> vector, int index) {
                 if(vector.elementAt(index).contains(","))
                         return true;
@@ -172,6 +211,13 @@ public class ReadPDF {
                         return false;
         }
         
+        /**
+         * get the Credit Points for the Exam.
+         * 
+         * @param vector
+         * @param index
+         * @return
+         */
         public String getCredit(Vector<String> vector, int index) {
                 int startCreditPosition = vector.elementAt(index).lastIndexOf("BE")+3;
                 int endCreditPosition = vector.elementAt(index).lastIndexOf("BE")+5;
@@ -180,6 +226,13 @@ public class ReadPDF {
                 return credit;
         }
         
+        /**
+         * if Exam is rated, get the mark of that Exam.
+         * 
+         * @param vector
+         * @param index
+         * @return
+         */
         public String getMark(Vector<String> vector, int index) {
                 // find the start & end mark position of the Exam.
                 int startMarkPosition = vector.elementAt(index).lastIndexOf("B")-4;
@@ -189,5 +242,37 @@ public class ReadPDF {
                 String mark = vector.elementAt(index).substring(startMarkPosition,endMarkPosition).replace(',', '.');
                 return mark;
         }
+
+		public double getProcent() {
+			return procent;
+		}
+
+		public void setProcent(double procent) {
+			this.procent = procent;
+		}
+
+		public String getSubject() {
+			return subject;
+		}
+
+		public void setSubject(String subject) {
+			this.subject = subject;
+		}
+
+		public String getCertificate() {
+			return certificate;
+		}
+
+		public void setCertificate(String certificate) {
+			this.certificate = certificate;
+		}
+
+		public String getStartThesis() {
+			return startThesis;
+		}
+
+		public void setStartThesis(String startThesis) {
+			this.startThesis = startThesis;
+		}
         
 }
