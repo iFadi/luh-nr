@@ -72,6 +72,7 @@ public class ReadPDF {
         }
         
         public void ReadPDF(String file) throws Exception {
+        		courses.clear();
                 PDDocument pddDocument=PDDocument.load(new File(file));
                 PDFTextStripper textStripper=new PDFTextStripper();
                 
