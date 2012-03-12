@@ -164,7 +164,7 @@ public class UpdateView extends JFrame implements ActionListener {
                         try {
                                 pdf.ReadPDF(getPath());
 //                              pdf = new ReadExcel(getPath());
-                                this.getStatus().setText("Anzahl gesamte Fächer: "+pdf.getSubjects()+"\nAnzahl benotete Fächer: "+pdf.getSubjectsWithNote()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getEndMark());
+                                this.getStatus().setText("Anzahl gesamte Fächer: "+pdf.getNumberOfSubjects()+"\nAnzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getFinalGrade());
 //                              this.getStatus().
                                 this.getStatus().setForeground(Color.blue.darker());
 //                              generate.setEnabled(true);
