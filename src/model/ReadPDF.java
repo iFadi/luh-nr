@@ -219,8 +219,8 @@ public class ReadPDF {
          * @return
          */
         public String getCredit(Vector<String> vector, int index) {
-                int startCreditPosition = vector.elementAt(index).lastIndexOf("BE")+3;
-                int endCreditPosition = vector.elementAt(index).lastIndexOf("BE")+5;
+                int startCreditPosition = vector.elementAt(index).indexOf("BE")+3; // Position of BE, warning if the exam title have BE!!
+                int endCreditPosition = vector.elementAt(index).indexOf("BE")+5; // Position of BE
                 String credit = vector.elementAt(index).substring(startCreditPosition,endCreditPosition);
                 
                 return credit;

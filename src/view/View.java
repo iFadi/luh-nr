@@ -91,7 +91,7 @@ public class View extends JFrame implements ActionListener {
                 progressBar = new JProgressBar();
                 status = new JEditorPane();
                 status.setEditable(false);
-                status.setText(" Notenspiegel einfach hier ziehen geht auch :-)\n\n LUH-NR\n Version 1.2.0\n 04.02.2012");
+                status.setText(" Notenspiegel einfach hier ziehen geht auch :-)\n\n LUH-NR\n Version: 1.2.0");
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
