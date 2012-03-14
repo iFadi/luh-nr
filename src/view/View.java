@@ -25,9 +25,9 @@ import model.ReadPDF;
  * View.java
  * 
  * 
- * @author Fadi Asbih
+ * @author Fadi M.H.Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.1.0  04/02/2012
+ * @version 1.0.2  14/03/2012
  * @copyright 2012
  * 
  * TERMS AND CONDITIONS:
@@ -52,7 +52,6 @@ public class View extends JFrame implements ActionListener {
 	 */
 	private static final long serialVersionUID = 6177350218996491783L;
 	private JButton open;
-	private JButton generate;
 	private JButton exit;
 	private JButton bug;
 	private JTextArea status;
@@ -84,7 +83,7 @@ public class View extends JFrame implements ActionListener {
 //		status.setHorizontalAlignment(JTextField.CENTER);
 		status.setEditable(false);
 //		generate.setEnabled(false);
-		status.setText("LUH-NR\nVersion 1.1.0\n04.02.2012");
+		status.setText(" LUH-NR\n Version 1.0.2");
 		status.setForeground(Color.black.darker());
 
 		this.add(status, BorderLayout.CENTER);
@@ -164,7 +163,7 @@ public class View extends JFrame implements ActionListener {
 			try {
 				pdf.ReadPDF(getPath());
 //				pdf = new ReadExcel(getPath());
-				this.getStatus().setText("Anzahl gesamte FŠcher: "+pdf.getSubjects()+"\nAnzahl benotete FŠcher: "+pdf.getSubjectsWithNote()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getEndMark());
+				this.getStatus().setText("Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+"\nAnzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getFinalGrade());
 //				this.getStatus().
 				this.getStatus().setForeground(Color.blue.darker());
 //				generate.setEnabled(true);

@@ -1,17 +1,15 @@
 package controller;
 
 import model.ReadPDF;
-import model.UpdateNotifier;
-import view.UpdateView;
 import view.View;
 /**
  * 
  * RunApp.java
  * 
  * 
- * @author Fadi Asbih
+ * @author Fadi M.H.Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.1.0  04/02/2012
+ * @version 1.0.2  14/03/2012
  * @copyright 2012
  * 
  * TERMS AND CONDITIONS:
@@ -34,17 +32,9 @@ public class RunApp {
 	public static void main(String[] args) throws Exception {
 		ReadPDF pdf = new ReadPDF();
 		
-		/**Notifiy if Update is available **/
-		UpdateNotifier un = new UpdateNotifier();
-		
-		if(un.IsNewVersionAvailable()) {
-			/** Load The Update View **/
-			UpdateView av = new UpdateView(pdf);
-		}
-		else {
-			/** Load The App View **/
-			View view = new View(pdf);
-		}	
+		/** Load The App View **/
+		View view = new View(pdf);
+			
 	}
 
 }
