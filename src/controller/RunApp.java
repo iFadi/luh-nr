@@ -39,7 +39,7 @@ public class RunApp {
                 
                 if(un.IsNewVersionAvailable()) {
                         /** Load The Update View **/
-                        UpdateView av = new UpdateView(pdf);
+                        UpdateView uv = new UpdateView(pdf);
                 }
                 else {
                         /** Load The Main App View **/

@@ -34,39 +34,16 @@ import org.apache.pdfbox.util.PDFTextStripper;
 public class ReadPDF {
 
         Vector<String> courses = new Vector();
-        private String finalGrade;
-        private String credits;
-        private String numberOfSubjects;
-        private String numberOfSubjectsWithGrade;
-        private String startThesis;
+        private String finalGrade; // holds the Calculated note based on all passed Exams.
+        private String credits; // holds the number of Credit Points.
+        private String numberOfSubjects; // holds the passed number of all Subjects(rated and not reated).
+        private String numberOfSubjectsWithGrade; // holds the passed number of all RATED Subjects.
+        private String startThesis; // tells whether you are able to Start your Thesis based on the Credit Points.
         private String subject;
-        private String certificate;
-        private double procent;
+        private String certificate; // Tells whether Bachelor or Master.
+        private double percent; // holds the percent value of the passed Exams.
         
-        public String getNumberOfSubjects() {
-                return numberOfSubjects;
-        }
-
-        public void setNumberOfSubjects(String numberOfSubjects) {
-                this.numberOfSubjects = numberOfSubjects;
-        }
-
-        public String getNumberOfSubjectsWithGrade() {
-                return numberOfSubjectsWithGrade;
-        }
-
-        public void setNumberOfSubjectsWithGrade(String numberOfSubjectsWithGrade) {
-                this.numberOfSubjectsWithGrade = numberOfSubjectsWithGrade;
-        }
-
-        public String getCredits() {
-                return credits;
-        }
-
-        public void setCredits(String credits) {
-                this.credits = credits;
-        }
-
+        
         public ReadPDF() {
                 
         }
@@ -150,12 +127,12 @@ public class ReadPDF {
                 setNumberOfSubjects(numberOfSubjects+"");
                 
                 if(getCertificate().contains("Master")) {
-                	setProcent((sumcredit/120)*100);
+                	setPercent((sumcredit/120)*100);
                 	if((int)sumcredit >= 75)
                 		this.setStartThesis("mšglich");
                 }
                 else if(getCertificate().contains("Bachelor")) {
-                	setProcent((sumcredit/180)*100);
+                	setPercent((sumcredit/180)*100);
                 	if((int)sumcredit >= 140) 
                 		this.setStartThesis("mšglich");
                 }
@@ -178,11 +155,11 @@ public class ReadPDF {
         }
         
         /**
-         * check if the Parsed lines are Exams, not i.e. Titles or adresses.
+         * check if the Parsed lines are Exams, not i.e. Titles or addresses.
          * 
          * @param vector
          * @param index
-         * @return
+         * @return Exam
          */
         public boolean isExam(Vector<String> vector, int index) {
                 if(vector.elementAt(index).indexOf("PL") > -1)
@@ -203,7 +180,7 @@ public class ReadPDF {
          * 
          * @param vector
          * @param index
-         * @return
+         * @return Rated or Not
          */
         public boolean isRated(Vector<String> vector, int index) {
                 if(vector.elementAt(index).contains(","))
@@ -243,13 +220,62 @@ public class ReadPDF {
                 String mark = vector.elementAt(index).substring(startMarkPosition,endMarkPosition).replace(',', '.');
                 return mark;
         }
+        
+        /**
+         * 
+         * @return All passed Exams(rated and not rated).
+         */
+        public String getNumberOfSubjects() {
+                return numberOfSubjects;
+        }
+        
+        /**
+         * Set the number of passed Subjects(rated and not rated).
+         * @param numberOfSubjects
+         */
+        public void setNumberOfSubjects(String numberOfSubjects) {
+                this.numberOfSubjects = numberOfSubjects;
+        }
+        
+        /**
+         * 
+         * @return All rated passed Exams.
+         */
+        public String getNumberOfSubjectsWithGrade() {
+                return numberOfSubjectsWithGrade;
+        }
+        
+        /**
+         * Set the number of passed rated Subjects.
+         * @param numberOfSubjectsWithGrade
+         */
+        public void setNumberOfSubjectsWithGrade(String numberOfSubjectsWithGrade) {
+                this.numberOfSubjectsWithGrade = numberOfSubjectsWithGrade;
+        }
+        
+        /**
+         * 
+         * @return Credit Points.
+         */
+        public String getCredits() {
+                return credits;
+        }
+        
+        /**
+         * Set the number of Credit Pionts.
+         * @param credits
+         */
+        public void setCredits(String credits) {
+                this.credits = credits;
+        }
 
-		public double getProcent() {
-			return procent;
+
+		public double getPercent() {
+			return percent;
 		}
 
-		public void setProcent(double procent) {
-			this.procent = procent;
+		public void setPercent(double percent) {
+			this.percent = percent;
 		}
 
 		public String getSubject() {

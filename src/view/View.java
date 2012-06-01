@@ -126,7 +126,7 @@ public class View extends JFrame implements ActionListener {
 
 						getStatus().setForeground(Color.black.darker());
 						progressBar.setIndeterminate(false);
-						progressBar.setValue((int)pdf.getProcent());
+						progressBar.setValue((int)pdf.getPercent());
 						progressBar.setStringPainted(true);
 					} catch (Exception e) {
                         // TODO Auto-generated catch block

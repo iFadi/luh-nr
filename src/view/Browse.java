@@ -43,7 +43,7 @@ public class Browse {
 //                  this.getStatus().
                     view.getStatus().setForeground(Color.black.darker());
                     view.progressBar.setIndeterminate(false);
-                    view.progressBar.setValue((int)pdf.getProcent());
+                    view.progressBar.setValue((int)pdf.getPercent());
                     view.progressBar.setStringPainted(true);
 //                  generate.setEnabled(true);
             } catch (Exception e1) {
