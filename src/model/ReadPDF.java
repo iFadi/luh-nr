@@ -2,6 +2,7 @@ package model;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -36,13 +37,14 @@ public class ReadPDF {
         Vector<String> courses = new Vector();
         private String finalGrade; // holds the Calculated note based on all passed Exams.
         private String credits; // holds the number of Credit Points.
-        private String numberOfSubjects; // holds the passed number of all Subjects(rated and not reated).
+        private String numberOfSubjects; // holds the passed number of all Subjects(rated and not rated).
         private String numberOfSubjectsWithGrade; // holds the passed number of all RATED Subjects.
         private String startThesis; // tells whether you are able to Start your Thesis based on the Credit Points.
-        private String subject;
+        private String subject; // studied subject. i.e. B.Sc.Informatik, M.Sc.Mathematik, etc...
         private String certificate; // Tells whether Bachelor or Master.
         private double percent; // holds the percent value of the passed Exams.
         
+        ArrayList<String> x = new ArrayList();
         
         public ReadPDF() {
                 
@@ -68,7 +70,7 @@ public class ReadPDF {
                 
                 // find all passed rankedNumberOfSubjects and save them in a Vector.
                 for(int i=0; i<lines.length; i++) {
-//                	System.out.println(lines[i]);
+                	System.out.println(lines[i]);
                 	if(lines[i].contains("Fach:")) {
                 		setSubject(lines[i]);
                 	}
@@ -79,7 +81,7 @@ public class ReadPDF {
                 		courses.addElement(lines[i]);
                     }
                 }
-//                System.out.println(getSubject() +" "+getCertificate());
+                System.out.println(getSubject() +" "+getCertificate());
                 for(int i=0; i<courses.size(); i++) {
                         
                         // first Check if the line is an Exam.
@@ -140,16 +142,30 @@ public class ReadPDF {
                 setNumberOfSubjectsWithGrade(rankednumberOfSubjects+"");
                 pddDocument.close();    
         }
-        
+        /**
+         * Help function
+         *  
+         * @param input
+         * @return 
+         */
         public String[] getLines(String input) {
                 String[] lines = input.split("\n");
                 return lines;
         }
 
+        /**
+         * 
+         * @return the grade based on all passed rated subjects.
+         */
         public String getFinalGrade() {
                 return finalGrade;
         }
 
+        /**
+         * Saves the grade based on all passed rated subjects.
+         * 
+         * @param finalGrade
+         */
         public void setFinalGrade(String finalGrade) {
                 this.finalGrade = finalGrade;
         }
@@ -194,7 +210,7 @@ public class ReadPDF {
          * 
          * @param vector
          * @param index
-         * @return
+         * @return Credit Points
          */
         public String getCredit(Vector<String> vector, int index) {
                 int startCreditPosition = vector.elementAt(index).indexOf("BE")+3; // Position of BE, warning if the exam title have BE!!
@@ -209,7 +225,7 @@ public class ReadPDF {
          * 
          * @param vector
          * @param index
-         * @return
+         * @return grade of the passed Exam.
          */
         public String getMark(Vector<String> vector, int index) {
                 // find the start & end mark position of the Exam.
@@ -231,6 +247,7 @@ public class ReadPDF {
         
         /**
          * Set the number of passed Subjects(rated and not rated).
+         * 
          * @param numberOfSubjects
          */
         public void setNumberOfSubjects(String numberOfSubjects) {
@@ -247,6 +264,7 @@ public class ReadPDF {
         
         /**
          * Set the number of passed rated Subjects.
+         * 
          * @param numberOfSubjectsWithGrade
          */
         public void setNumberOfSubjectsWithGrade(String numberOfSubjectsWithGrade) {
@@ -263,17 +281,25 @@ public class ReadPDF {
         
         /**
          * Set the number of Credit Pionts.
+         * 
          * @param credits
          */
         public void setCredits(String credits) {
                 this.credits = credits;
         }
 
-
+        /**
+         * 
+         * @return results of the credit points displayed in Percent.
+         */
 		public double getPercent() {
 			return percent;
 		}
-
+		
+		/**
+		 * Saves the percent result 
+		 * @param percent
+		 */
 		public void setPercent(double percent) {
 			this.percent = percent;
 		}
@@ -285,19 +311,35 @@ public class ReadPDF {
 		public void setSubject(String subject) {
 			this.subject = subject;
 		}
-
+		
+		/**
+		 * 
+		 * @return certificate
+		 */
 		public String getCertificate() {
 			return certificate;
 		}
-
+		
+		/**
+		 * 
+		 * @param certificate
+		 */
 		public void setCertificate(String certificate) {
 			this.certificate = certificate;
 		}
 
+		/**
+		 * 
+		 * @return status about starting the Thesis work
+		 */
 		public String getStartThesis() {
 			return startThesis;
 		}
 
+		/**
+		 * 
+		 * @param startThesis
+		 */
 		public void setStartThesis(String startThesis) {
 			this.startThesis = startThesis;
 		}

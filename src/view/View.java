@@ -115,19 +115,18 @@ public class View extends JFrame implements ActionListener {
                 	try {
 						pdf.ReadPDF(getPath());
 						getStatus().setText(
-							 " "+ pdf.getSubject()+
-							 "\n " + pdf.getCertificate()+
-							 "\n Anzahl gesamte FÃ¤cher: "+pdf.getNumberOfSubjects()+
-       						 "\n Anzahl benotete FÃ¤cher: "+pdf.getNumberOfSubjectsWithGrade()+
-       						 "\n Credit Points: "+pdf.getCredits()+
-       						 "\n Note: "+pdf.getFinalGrade()+
-       						 "\n Abschlussarbeit starten: "+pdf.getStartThesis()+
-       						 "\n Studium Geschafft in Prozent... ");
-
-						getStatus().setForeground(Color.black.darker());
-						progressBar.setIndeterminate(false);
-						progressBar.setValue((int)pdf.getPercent());
-						progressBar.setStringPainted(true);
+								 " "+ pdf.getSubject()+
+								 "\n " + pdf.getCertificate()+
+								 "\n Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
+	      						 "\n Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+
+	      						 "\n Credit Points: "+pdf.getCredits()+
+	      						 "\n Note: "+pdf.getFinalGrade()+
+	      						 "\n Abschlussarbeit starten: "+pdf.getStartThesis()+
+	      						 "\n Studium Geschafft in Prozent... ");
+	                    getStatus().setForeground(Color.black.darker());
+	                    progressBar.setIndeterminate(false);
+	                    progressBar.setValue((int)pdf.getPercent());
+	                    progressBar.setStringPainted(true);
 					} catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
