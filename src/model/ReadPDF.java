@@ -12,9 +12,9 @@ import org.apache.pdfbox.util.PDFTextStripper;
  * ReadPDF.java
  * 
  * 
- * @author Fadi M.H.Asbih
+ * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.2.0  04/02/2012
+ * @version 1.2.1  10/11/2012
  * @copyright 2012
  * 
  * TERMS AND CONDITIONS:
@@ -36,7 +36,11 @@ public class ReadPDF {
 
         Vector<String> courses = new Vector();
         private String finalGrade; // holds the Calculated note based on all passed Exams.
-        private String credits; // holds the number of Credit Points.
+        private double subjectGrade;
+        private double subjectCredits;
+        private double weightValue;
+        private double weightCredits;
+        private double credits; // holds the number of Credit Points.
         private String numberOfSubjects; // holds the passed number of all Subjects(rated and not rated).
         private String numberOfSubjectsWithGrade; // holds the passed number of all RATED Subjects.
         private String startThesis; // tells whether you are able to Start your Thesis based on the Credit Points.
@@ -44,27 +48,20 @@ public class ReadPDF {
         private String certificate; // Tells whether Bachelor or Master.
         private double percent; // holds the percent value of the passed Exams.
         
-        ArrayList<String> x = new ArrayList();
+//        ArrayList<String> x = new ArrayList();
         
         public ReadPDF() {
                 
         }
         
-        public void ReadPDF(String file) throws Exception {
-        		courses.clear();
+        public void parseFile(final String file) throws Exception {
+        		courses.clear(); //If more than one PDF is parsed
                 PDDocument pddDocument=PDDocument.load(new File(file));
                 PDFTextStripper textStripper=new PDFTextStripper();
                 
                 this.setStartThesis("noch nicht mšglich");
-                
-                double not=0;
-                double sumCredit = 0;
-                double s=0;
-                double s1=0;
-                double sumcredit = 0;
-                int rankednumberOfSubjects=0;
+                int rankedNumberOfSubjects=0;
                 int numberOfSubjects=0;
-                DecimalFormat df = new DecimalFormat("0.00");
                 String x = textStripper.getText(pddDocument);
                 String[] lines = getLines(x);
                 
@@ -81,7 +78,8 @@ public class ReadPDF {
                 		courses.addElement(lines[i]);
                     }
                 }
-                System.out.println(getSubject() +" "+getCertificate());
+                //Debug
+//                System.out.println(getSubject() +" "+getCertificate());
                 for(int i=0; i<courses.size(); i++) {
                         
                         // first Check if the line is an Exam.
@@ -92,19 +90,21 @@ public class ReadPDF {
                                         
                                         // Get the mark of the Subject.
                                         String mark = getMark(courses, i);
-                                        // Count the number of the rankednumberOfSubjects.
-                                        rankednumberOfSubjects++;
+                                        // Count the number of the rankedNumberOfSubjects.
+                                        rankedNumberOfSubjects++;
                                         // Count the number of the numberOfSubjects.
                                         numberOfSubjects++;
                                         // Get the Credit Points of the Subject.
                                         String credit = getCredit(courses, i);
                                         
-                                        not = Double.parseDouble(mark);
-                                        sumCredit = Double.parseDouble(credit);
-                                
-                                        s1 = s1 + not*sumCredit;
-                                        s = s + sumCredit;
-                                        sumcredit = sumcredit + sumCredit;
+                                        calculateAverageValue(mark, credit, 0);
+                                        
+//                                        not = Double.parseDouble(mark); // Get the Exam grade
+//                                        sumCredit = Double.parseDouble(credit); // Get the Exam credit points
+//                                
+//                                        s1 = s1 + not*sumCredit;
+//                                        s = s + sumCredit;
+//                                        sumcredit = sumcredit + sumCredit;
                                         
                                         // Debug
 //                                        System.out.println("Note: "+mark);
@@ -114,8 +114,9 @@ public class ReadPDF {
                                 else { // Not Rated Exams.
                                         numberOfSubjects++;
                                         String credit = getCredit(courses, i);
-                                        sumCredit = Double.parseDouble(credit);
-                                        sumcredit = sumcredit + sumCredit;
+                                        calculateAverageValue(null, credit, 1);
+//                                        sumCredit = Double.parseDouble(credit);
+//                                        sumcredit = sumcredit + sumCredit;
                                         
                                         // Debug
 //                                        System.out.println("Credit: " + credit);
@@ -123,25 +124,48 @@ public class ReadPDF {
                                 }
                         }
                 }
-                                
-                setFinalGrade(df.format(s1/s)+"");
-                setCredits((int)sumcredit+"");
+                calculateAverageValue(null, null, 2);
+//                setFinalGrade(df.format(s1/s)+"");
+//                setCredits((int)sumcredit+"");
                 setNumberOfSubjects(numberOfSubjects+"");
                 
                 if(getCertificate().contains("Master")) {
-                	setPercent((sumcredit/120)*100);
-                	if((int)sumcredit >= 75)
+                	setPercent((getCredits()/120)*100);
+                	if((int)getCredits() >= 75)
                 		this.setStartThesis("mšglich");
                 }
                 else if(getCertificate().contains("Bachelor")) {
-                	setPercent((sumcredit/180)*100);
-                	if((int)sumcredit >= 140) 
+                	setPercent((getCredits()/180)*100);
+                	if((int)getCredits() >= 140) 
                 		this.setStartThesis("mšglich");
                 }
               
-                setNumberOfSubjectsWithGrade(rankednumberOfSubjects+"");
+                setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+"");
                 pddDocument.close();    
         }
+        
+        public void calculateAverageValue(String mark, String credit, int mode) {
+            DecimalFormat df = new DecimalFormat("0.00");
+            
+        	switch (mode) {
+        		case 0:
+        			setSubjectGrade(Double.parseDouble(mark)); // Get the Exam grade
+        			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
+        			setWeightValue(getWeightValue() + getSubjectGrade()*getSubjectCredits());
+        			setWeightCredits(getWeightCredits()+getSubjectCredits()); // Sum of weighted Credit
+        			break;
+        		case 1:
+        			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
+        			setCredits(getWeightCredits()+getSubjectCredits());
+//        			setCredits(getCredits()+getSubjectCredits());
+        			break;
+        		case 2:
+                    setFinalGrade(df.format(getWeightValue()/getWeightCredits())+"");
+//                    setCredits(getCredits());
+        			break;
+        	}
+        }
+        
         /**
          * Help function
          *  
@@ -154,7 +178,6 @@ public class ReadPDF {
         }
 
         /**
-         * 
          * @return the grade based on all passed rated subjects.
          */
         public String getFinalGrade() {
@@ -187,7 +210,9 @@ public class ReadPDF {
                 if(vector.elementAt(index).indexOf("PR") > -1)
                         return true;
                 if(vector.elementAt(index).indexOf("GL") > -1)
-                    return true;
+                    	return true;
+                if(vector.elementAt(index).indexOf("BA") > -1)
+                		return true;
                 else
                         return false;
         }
@@ -213,7 +238,7 @@ public class ReadPDF {
          * @return Credit Points
          */
         public String getCredit(Vector<String> vector, int index) {
-                int startCreditPosition = vector.elementAt(index).indexOf("BE")+3; // Position of BE, warning if the exam title have BE!!
+                int startCreditPosition = vector.elementAt(index).indexOf("BE")+3; // Position of BE, warning if the exam title have BE, may cause parsing error!!
                 int endCreditPosition = vector.elementAt(index).indexOf("BE")+5; // Position of BE
                 String credit = vector.elementAt(index).substring(startCreditPosition,endCreditPosition);
                 
@@ -275,7 +300,7 @@ public class ReadPDF {
          * 
          * @return Credit Points.
          */
-        public String getCredits() {
+        public double getCredits() {
                 return credits;
         }
         
@@ -284,7 +309,7 @@ public class ReadPDF {
          * 
          * @param credits
          */
-        public void setCredits(String credits) {
+        public void setCredits(double credits) {
                 this.credits = credits;
         }
 
@@ -342,6 +367,56 @@ public class ReadPDF {
 		 */
 		public void setStartThesis(String startThesis) {
 			this.startThesis = startThesis;
+		}
+
+		/**
+		 * @return the subjectGrade
+		 */
+		public double getSubjectGrade() {
+			return subjectGrade;
+		}
+
+		/**
+		 * @param subjectGrade the subjectGrade to set
+		 */
+		public void setSubjectGrade(double subjectGrade) {
+			this.subjectGrade = subjectGrade;
+		}
+
+		/**
+		 * @return the subjectCredits
+		 */
+		public double getSubjectCredits() {
+			return subjectCredits;
+		}
+
+		/**
+		 * @param subjectCredits the subjectCredits to set
+		 */
+		public void setSubjectCredits(double subjectCredits) {
+			this.subjectCredits = subjectCredits;
+		}
+
+		public double getWeightValue() {
+			return weightValue;
+		}
+
+		public void setWeightValue(double weightValue) {
+			this.weightValue = weightValue;
+		}
+
+		/**
+		 * @return the weightCredits
+		 */
+		public double getWeightCredits() {
+			return weightCredits;
+		}
+
+		/**
+		 * @param weightCredits the weightCredits to set
+		 */
+		public void setWeightCredits(double weightCredits) {
+			this.weightCredits = weightCredits;
 		}
         
 }

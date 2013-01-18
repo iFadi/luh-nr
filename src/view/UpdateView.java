@@ -25,9 +25,9 @@ import model.ReadPDF;
  * UpdateView.java
  * 
  * 
- * @author Fadi Asbih
+ * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.1.0  04/02/2012
+ * @version 1.2.1  10/11/2012
  * @copyright 2012
  * 
  * TERMS AND CONDITIONS:
@@ -162,7 +162,7 @@ public class UpdateView extends JFrame implements ActionListener {
                         dir = c.getCurrentDirectory().toString();
                         setPath(dir + "/" + filename);
                         try {
-                                pdf.ReadPDF(getPath());
+                                pdf.parseFile(getPath());
 //                              pdf = new ReadExcel(getPath());
                                 this.getStatus().setText("Anzahl gesamte Fächer: "+pdf.getNumberOfSubjects()+"\nAnzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+"\nCredits: "+pdf.getCredits()+"\nNote: "+pdf.getFinalGrade());
 //                              this.getStatus().

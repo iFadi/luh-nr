@@ -9,9 +9,9 @@ import view.View;
  * RunApp.java
  * 
  * 
- * @author Fadi M.H.Asbih
+ * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.2.0  04/02/2012
+ * @version 1.2.1  10/11/2012
  * @copyright 2012
  * 
  * TERMS AND CONDITIONS:

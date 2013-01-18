@@ -34,9 +34,9 @@ import model.ReadPDF;
  * View.java
  * 
  * 
- * @author Fadi M.H.Asbih
+ * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.2.0  04/02/2012
+ * @version 1.2.1  10/11/2012
  * @copyright 2012
  * 
  * TERMS AND CONDITIONS:
@@ -113,7 +113,7 @@ public class View extends JFrame implements ActionListener {
                     {   
                 	setPath(files[0].getAbsolutePath());
                 	try {
-						pdf.ReadPDF(getPath());
+						pdf.parseFile(getPath());
 						getStatus().setText(
 								 " "+ pdf.getSubject()+
 								 "\n " + pdf.getCertificate()+
