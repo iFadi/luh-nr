@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 
-import model.ReadPDF;
+import model.ParsePDF;
 
 public class InputPanel extends JPanel implements ActionListener {
 	
@@ -25,10 +25,10 @@ public class InputPanel extends JPanel implements ActionListener {
 	private JButton open;
     private JButton exit;
     private Browse browse;
-    private ReadPDF pdf;
+    private ParsePDF pdf;
     private View view;
     
-	public InputPanel(View view, ReadPDF pdf) {
+	public InputPanel(View view, ParsePDF pdf) {
 		this.setPdf(pdf);
 		this.setView(view);
 		new JPanel();
@@ -72,11 +72,11 @@ public class InputPanel extends JPanel implements ActionListener {
 		this.view = view;
 	}
 
-	public ReadPDF getPdf() {
+	public ParsePDF getPdf() {
 		return pdf;
 	}
 
-	public void setPdf(ReadPDF pdf) {
+	public void setPdf(ParsePDF pdf) {
 		this.pdf = pdf;
 	}
 }

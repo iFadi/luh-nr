@@ -3,6 +3,7 @@ package model;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Vector;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -32,7 +33,7 @@ import org.apache.pdfbox.util.PDFTextStripper;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-public class ReadPDF {
+public class ParsePDF extends Observable{
 
         Vector<String> courses = new Vector();
         private String finalGrade; // holds the Calculated note based on all passed Exams.
@@ -50,7 +51,7 @@ public class ReadPDF {
         
 //        ArrayList<String> x = new ArrayList();
         
-        public ReadPDF() {
+        public ParsePDF() {
                 
         }
         

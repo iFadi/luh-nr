@@ -12,6 +12,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -27,7 +29,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import net.iharder.dnd.FileDrop;
 
-import model.ReadPDF;
+import model.ParsePDF;
+import model.UpdateNotifier;
 
 /**
  * 
@@ -54,7 +57,7 @@ import model.ReadPDF;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-public class View extends JFrame implements ActionListener {
+public class View extends JFrame implements ActionListener, Observer {
 
         /**
          * 
@@ -63,14 +66,15 @@ public class View extends JFrame implements ActionListener {
         private JButton bug;
         private JEditorPane status;
         private String path;
-        private ReadPDF pdf;
+        private ParsePDF pdf;
         public JProgressBar progressBar;
         public Desktop d;
         
         private InputPanel ip;
 
-        public View(final ReadPDF pdf) throws Exception {
+        public View(final ParsePDF pdf) throws Exception {
                 this.setPdf(pdf);
+        		UpdateNotifier un = new UpdateNotifier(); // Notify if Update is available 
 
                 this.setTitle("LUH Notenspiegel Rechner");
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,6 +99,10 @@ public class View extends JFrame implements ActionListener {
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
+                
+        		if(un.IsNewVersionAvailable()) {
+        			bug.setText("DOWNLOAD NOW"); //Download link to the new App
+        		}
 
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 this.setLocationRelativeTo(null);
@@ -176,11 +184,17 @@ public class View extends JFrame implements ActionListener {
                 this.status = status;
         }
 
-		public ReadPDF getPdf() {
+		public ParsePDF getPdf() {
 			return pdf;
 		}
 
-		public void setPdf(ReadPDF pdf) {
+		public void setPdf(ParsePDF pdf) {
 			this.pdf = pdf;
+		}
+
+		@Override
+		public void update(Observable arg0, Object arg1) {
+			// TODO Auto-generated method stub
+			
 		}
 }

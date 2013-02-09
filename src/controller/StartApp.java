@@ -1,8 +1,7 @@
 package controller;
 
-import model.ReadPDF;
-import model.UpdateNotifier;
-import view.UpdateView;
+import model.ParsePDF;
+import model.Version;
 import view.View;
 /**
  * 
@@ -29,22 +28,15 @@ import view.View;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * 
  */
-public class RunApp {
+public class StartApp {
         
         public static void main(String[] args) throws Exception {
-                ReadPDF pdf = new ReadPDF();
-                
-                /** Notifiy if Update is available **/
-                UpdateNotifier un = new UpdateNotifier();
-                
-                if(un.IsNewVersionAvailable()) {
-                        /** Load The Update View **/
-                        UpdateView uv = new UpdateView(pdf);
-                }
-                else {
-                        /** Load The Main App View **/
-                        View view = new View(pdf);
-                }       
+        	
+    		Version version = new Version(1, 3, 0); // The App Version.
+            ParsePDF pdf = new ParsePDF();
+            View view = new View(pdf);
+            pdf.addObserver(view);
+                    
         }
 
 }

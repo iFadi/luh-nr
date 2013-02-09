@@ -6,7 +6,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import model.ReadPDF;
+import model.ParsePDF;
 /**
  * 
  * Browse.java
@@ -38,7 +38,7 @@ public class Browse {
     private String dir;
     private String path;
 	
-	public Browse(View view, ReadPDF pdf) {
+	public Browse(View view, ParsePDF pdf) {
 
 		JFileChooser c = new JFileChooser();
         c.setMultiSelectionEnabled(false);
