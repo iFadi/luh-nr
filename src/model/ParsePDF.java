@@ -9,14 +9,13 @@ import java.util.Vector;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 /**
- * 
- * ReadPDF.java
- * 
+ * $Id: UpdateNotifier.java 66 2013-02-03 16:41:55Z Fadi.Asbih@gmail.com $
+ * $LastChangedDate: 2013-02-03 17:41:55 +0100 (So, 03 Feb 2013) $
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.2.1  10/11/2012
- * @copyright 2012
+ * @version $Revision: 66 $
+ * @copyright $Date: 2013-02-03 17:41:55 +0100 (So, 03 Feb 2013) $
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -35,19 +34,21 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 public class ParsePDF extends Observable{
 
-        Vector<String> courses = new Vector<String>();
-        private String finalGrade; // holds the Calculated note based on all passed Exams.
+        private Vector<String> courses = new Vector<String>();
+       
         private double subjectGrade;
         private double subjectCredits;
         private double weightValue;
-        private double weightCredits;
-        private double credits; // holds the number of Credit Points.
+        private double weightedCredits; // holds the number of Credit Points for rated Courses.
+        private double unweightedCredits; // holds the number of Credit Points for unrated Courses.
+        private double credits; // holds the number of all Credit Points.
+        private double percent; // holds the percent value of the passed Exams.
         private String numberOfSubjects; // holds the passed number of all Subjects(rated and not rated).
         private String numberOfSubjectsWithGrade; // holds the passed number of all RATED Subjects.
         private String startThesis; // tells whether you are able to Start your Thesis based on the Credit Points.
         private String subject; // studied subject. i.e. B.Sc.Informatik, M.Sc.Mathematik, etc...
         private String certificate; // Tells whether Bachelor or Master.
-        private double percent; // holds the percent value of the passed Exams.
+        private String finalGrade; // holds the Calculated note based on all passed Exams.
                 
         public ParsePDF() {
                 
@@ -113,8 +114,7 @@ public class ParsePDF extends Observable{
                 		this.setStartThesis("mšglich");
                 }
               
-                setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+"");
-//                pddDocument.close();    
+                setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+""); 
         }
         
         /**
@@ -162,20 +162,18 @@ public class ParsePDF extends Observable{
         			setSubjectGrade(Double.parseDouble(mark)); // Get the Exam grade
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
         			setWeightValue(getWeightValue() + getSubjectGrade()*getSubjectCredits());
-        			setWeightCredits(getWeightCredits()+getSubjectCredits()); // Sum of weighted Credit
-        			System.out.println("W:" +getWeightCredits());
+        			setWeightCredits(getWeightedCredits()+getSubjectCredits()); // Sum of weighted Credit
         			break;
         		case 1:
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
-        			setCredits(getCredits()+getSubjectCredits());
-        			System.out.println(getCredits());
-//        			setCredits(getCredits()+getSubjectCredits());
+        			setUnweightedCredits(getUnweightedCredits()+getSubjectCredits()); // Sum of weighted Credit
         			break;
         		case 2:
-                    setFinalGrade(df.format(getWeightValue()/getWeightCredits())+"");
-//                    setCredits(getCredits());
+                    setFinalGrade(df.format(getWeightValue()/getWeightedCredits())+"");
         			break;
         	}
+        	
+        	setCredits(getWeightedCredits()+getUnweightedCredits());
         }
         
         /**
@@ -206,7 +204,7 @@ public class ParsePDF extends Observable{
         }
         
         /**
-         * check if the Parsed lines are Exams, not i.e. Titles or addresses.
+         * check if the Parsed lines are Exams, i.e. not titles or addresses.
          * 
          * @param vector
          * @param index
@@ -436,15 +434,29 @@ public class ParsePDF extends Observable{
 		/**
 		 * @return the weightCredits
 		 */
-		public double getWeightCredits() {
-			return weightCredits;
+		public double getWeightedCredits() {
+			return weightedCredits;
 		}
 
 		/**
 		 * @param weightCredits the weightCredits to set
 		 */
 		public void setWeightCredits(double weightCredits) {
-			this.weightCredits = weightCredits;
+			this.weightedCredits = weightCredits;
+		}
+
+		/**
+		 * @return the unweightedCredits
+		 */
+		public double getUnweightedCredits() {
+			return unweightedCredits;
+		}
+
+		/**
+		 * @param unweightedCredits the unweightedCredits to set
+		 */
+		public void setUnweightedCredits(double unweightedCredits) {
+			this.unweightedCredits = unweightedCredits;
 		}
         
 }
