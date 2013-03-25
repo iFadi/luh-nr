@@ -1,8 +1,8 @@
 package model;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Vector;
 
@@ -35,7 +35,7 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 public class ParsePDF extends Observable{
 
-        Vector<String> courses = new Vector();
+        Vector<String> courses = new Vector<String>();
         private String finalGrade; // holds the Calculated note based on all passed Exams.
         private double subjectGrade;
         private double subjectCredits;
@@ -48,45 +48,27 @@ public class ParsePDF extends Observable{
         private String subject; // studied subject. i.e. B.Sc.Informatik, M.Sc.Mathematik, etc...
         private String certificate; // Tells whether Bachelor or Master.
         private double percent; // holds the percent value of the passed Exams.
-        
-//        ArrayList<String> x = new ArrayList();
-        
+                
         public ParsePDF() {
                 
         }
         
         public void parseFile(final String file) throws Exception {
         		courses.clear(); //If more than one PDF is parsed
-                PDDocument pddDocument=PDDocument.load(new File(file));
-                PDFTextStripper textStripper=new PDFTextStripper();
-                
-                this.setStartThesis("noch nicht mšglich");
+                setStartThesis("noch nicht mšglich");
+                findPassedCourses(file);
+
                 int rankedNumberOfSubjects=0;
                 int numberOfSubjects=0;
-                String x = textStripper.getText(pddDocument);
-                String[] lines = getLines(x);
                 
-                // find all passed rankedNumberOfSubjects and save them in a Vector.
-                for(int i=0; i<lines.length; i++) {
-                	System.out.println(lines[i]);
-                	if(lines[i].contains("Fach:")) {
-                		setSubject(lines[i]);
-                	}
-                	if(lines[i].contains("Abschluss:")) {
-                		setCertificate(lines[i]);
-                	}
-                	if(lines[i].contains("BE")) {
-                		courses.addElement(lines[i]);
-                    }
-                }
                 //Debug
 //                System.out.println(getSubject() +" "+getCertificate());
-                for(int i=0; i<courses.size(); i++) {
+                for(int i=0; i<courses.size(); i++) { //iterate over the passed courses
                         
-                        // first Check if the line is an Exam.
+                        // Check if the line is an Exam.
                         if(isExam(courses, i)) {
                                 
-                                // second Check if the Exam is rated.
+                                // Check if the Exam is rated.
                                 if(isRated(courses, i)) {
                                         
                                         // Get the mark of the Subject.
@@ -100,34 +82,24 @@ public class ParsePDF extends Observable{
                                         
                                         calculateAverageValue(mark, credit, 0);
                                         
-//                                        not = Double.parseDouble(mark); // Get the Exam grade
-//                                        sumCredit = Double.parseDouble(credit); // Get the Exam credit points
-//                                
-//                                        s1 = s1 + not*sumCredit;
-//                                        s = s + sumCredit;
-//                                        sumcredit = sumcredit + sumCredit;
-                                        
                                         // Debug
+//                                        System.out.println(courses.elementAt(i));
 //                                        System.out.println("Note: "+mark);
 //                                        System.out.println("Credit: " + credit);
-//                                        System.out.println(courses.elementAt(i));
+                                        
                                 }
                                 else { // Not Rated Exams.
                                         numberOfSubjects++;
                                         String credit = getCredit(courses, i);
                                         calculateAverageValue(null, credit, 1);
-//                                        sumCredit = Double.parseDouble(credit);
-//                                        sumcredit = sumcredit + sumCredit;
                                         
                                         // Debug
-//                                        System.out.println("Credit: " + credit);
 //                                        System.out.println(courses.elementAt(i));
+//                                        System.out.println("Credit: " + credit);
                                 }
                         }
                 }
                 calculateAverageValue(null, null, 2);
-//                setFinalGrade(df.format(s1/s)+"");
-//                setCredits((int)sumcredit+"");
                 setNumberOfSubjects(numberOfSubjects+"");
                 
                 if(getCertificate().contains("Master")) {
@@ -142,9 +114,46 @@ public class ParsePDF extends Observable{
                 }
               
                 setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+"");
-                pddDocument.close();    
+//                pddDocument.close();    
         }
         
+        /**
+         * 
+         * @param file
+         * @throws IOException
+         */
+        public void findPassedCourses(String file) throws IOException {
+            PDDocument pddDocument=PDDocument.load(new File(file));
+            PDFTextStripper textStripper = new PDFTextStripper();
+            String x = textStripper.getText(pddDocument);
+            String[] lines = getLines(x);
+            
+            // find all passed exams and save them in a Vector called courses.
+            for(int i=0; i<lines.length; i++) {
+//            	System.out.println(lines[i]);
+            	if(lines[i].contains("Fach:")) {
+            		setSubject(lines[i]);
+            	}
+            	if(lines[i].contains("Abschluss:")) {
+            		setCertificate(lines[i]);
+            	}
+            	if(lines[i].contains("BE")) {
+            		courses.addElement(lines[i]);
+                }
+            }
+            pddDocument.close();
+        }
+        
+        /**
+         * 
+         * @param mark
+         * @param credit
+         * @param mode
+         * 
+         * mode 0: Calculate rated Exams
+         * mode 1: Calculate unrated Exams
+         * mode 2: Calculate the final Grade
+         */
         public void calculateAverageValue(String mark, String credit, int mode) {
             DecimalFormat df = new DecimalFormat("0.00");
             
@@ -154,10 +163,12 @@ public class ParsePDF extends Observable{
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
         			setWeightValue(getWeightValue() + getSubjectGrade()*getSubjectCredits());
         			setWeightCredits(getWeightCredits()+getSubjectCredits()); // Sum of weighted Credit
+        			System.out.println("W:" +getWeightCredits());
         			break;
         		case 1:
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
-        			setCredits(getWeightCredits()+getSubjectCredits());
+        			setCredits(getCredits()+getSubjectCredits());
+        			System.out.println(getCredits());
 //        			setCredits(getCredits()+getSubjectCredits());
         			break;
         		case 2:
@@ -330,10 +341,18 @@ public class ParsePDF extends Observable{
 			this.percent = percent;
 		}
 
+		/**
+		 * 
+		 * @return
+		 */
 		public String getSubject() {
 			return subject;
 		}
 
+		/**
+		 * 
+		 * @param subject
+		 */
 		public void setSubject(String subject) {
 			this.subject = subject;
 		}
@@ -398,10 +417,18 @@ public class ParsePDF extends Observable{
 			this.subjectCredits = subjectCredits;
 		}
 
+		/**
+		 * 
+		 * @return
+		 */
 		public double getWeightValue() {
 			return weightValue;
 		}
 
+		/**
+		 * 
+		 * @param weightValue
+		 */
 		public void setWeightValue(double weightValue) {
 			this.weightValue = weightValue;
 		}
