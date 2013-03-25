@@ -1,12 +1,12 @@
 package model;
 /**
- * $Id: Version.java 75 2013-02-04 12:39:45Z Fadi.Asbih@gmail.com $
- * $LastChangedDate: 2013-02-04 13:39:45 +0100 (Mo, 04 Feb 2013) $
+ * $Id$
+ * $LastChangedDate$
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version $Revision: 75 $
- * @copyright $Date: 2013-02-04 13:39:45 +0100 (Mo, 04 Feb 2013) $
+ * @version $Revision$
+ * @copyright $Date$
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify

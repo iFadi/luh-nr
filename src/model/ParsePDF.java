@@ -9,13 +9,13 @@ import java.util.Vector;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 /**
- * $Id: UpdateNotifier.java 66 2013-02-03 16:41:55Z Fadi.Asbih@gmail.com $
- * $LastChangedDate: 2013-02-03 17:41:55 +0100 (So, 03 Feb 2013) $
+ * $Id$
+ * $LastChangedDate$
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version $Revision: 66 $
- * @copyright $Date: 2013-02-03 17:41:55 +0100 (So, 03 Feb 2013) $
+ * @version $Revision$
+ * @copyright $Date$
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
