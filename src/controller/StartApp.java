@@ -4,14 +4,13 @@ import model.ParsePDF;
 import model.Version;
 import view.View;
 /**
- * 
- * RunApp.java
- * 
+ * $Id$
+ * $LastChangedDate$
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.2.1  10/11/2012
- * @copyright 2012
+ * @version $Revision$
+ * @copyright $Date$
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -32,10 +31,10 @@ public class StartApp {
         
         public static void main(String[] args) throws Exception {
         	
-    		Version version = new Version(1, 3, 0); // The App Version.
-            ParsePDF pdf = new ParsePDF();
-            View view = new View(pdf);
-            pdf.addObserver(view);
+    		Version version = new Version(1, 2, 1); // The App Version.
+            ParsePDF pdf = new ParsePDF(); // Call the parse Model
+            View view = new View(pdf, version); // Call the View window
+            pdf.addObserver(view); // interaction between Model and View.
                     
         }
 

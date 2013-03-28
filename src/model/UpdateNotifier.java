@@ -30,13 +30,19 @@ import java.net.UnknownHostException;
  * 
  */
 public class UpdateNotifier {
-	final String minorUpdate = "http://ilias-userimport.googlecode.com/files/LUH-NR_1.3.0.jar";
-	final String bugUpdate = "http://ilias-userimport.googlecode.com/files/LUH-NR_1.2.1.jar";
+	private String projectURL;
+	private Version version;
 	
-	public UpdateNotifier() {
-		
+	public UpdateNotifier(Version version) {
+		setVersion(version);
+		setProjectURL("http://luh-nr.googlecode.com/files/LUH-NR_");
 	}
 	
+	/**
+	 * 
+	 * @param update
+	 * @return if there is a connection to the server
+	 */
 	public boolean check(String update)
     {
             try {
@@ -49,25 +55,57 @@ public class UpdateNotifier {
                     //trying to retrieve data from the source. If there
                     //is no connection, this line will fail
                     Object objData = urlConnect.getContent();
-//                    System.out.println(objData);
+                    System.out.println(objData);
 
             } catch (UnknownHostException e) {
-                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
                     return false;
             }
             catch (IOException e) {
-                    // TODO Auto-generated catch block
-//                    e.printStackTrace();
                     return false;
             }
             return true;
     }
 	
+	/**
+	 * 
+	 * @return true if new version is available
+	 */
 	public boolean IsNewVersionAvailable() {
-		if(check(minorUpdate) || check(bugUpdate))
+		if(check(getProjectURL()+(getVersion().getMajor()+1)+"."+getVersion().getMinor()+"."+getVersion().getBug()+".jar")) 
+			return true;
+		else if(check(getProjectURL()+getVersion().getMajor()+"."+(getVersion().getMinor()+1)+"."+getVersion().getBug()+".jar"))
+			return true;
+		else if(check(getProjectURL()+getVersion().getMajor()+"."+getVersion().getMinor()+"."+(getVersion().getBug()+1)+".jar"))
 			return true;
 		else
 			return false;
+	}
+
+	/**
+	 * @return the version
+	 */
+	public Version getVersion() {
+		return version;
+	}
+
+	/**
+	 * @param version the version to set
+	 */
+	public void setVersion(Version version) {
+		this.version = version;
+	}
+
+	/**
+	 * @return the projectURL
+	 */
+	public String getProjectURL() {
+		return projectURL;
+	}
+
+	/**
+	 * @param projectURL the projectURL to set
+	 */
+	public void setProjectURL(String projectURL) {
+		this.projectURL = projectURL;
 	}	
 }

@@ -3,19 +3,17 @@ package view;
 import java.awt.Color;
 
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.ParsePDF;
 /**
- * 
- * Browse.java
- * 
+ * $Id$
+ * $LastChangedDate$
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.2.1  10/11/2012
- * @copyright 2012
+ * @version $Revision$
+ * @copyright $Date$
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -43,7 +41,7 @@ public class Browse {
 		JFileChooser c = new JFileChooser();
         c.setMultiSelectionEnabled(false);
         c.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF", "pdf");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF-Notenspiegel", "pdf");
         c.setFileFilter(filter);
         // Demonstrate "Open" dialog:
         int rVal = c.showOpenDialog(view);
@@ -58,9 +56,10 @@ public class Browse {
                     view.getStatus().setText(
 							 " "+ pdf.getSubject()+
 							 "\n " + pdf.getCertificate()+
-							 "\n Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
-      						 "\n Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+
-      						 "\n Credit Points: "+pdf.getCredits()+
+	      				     "\n Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+" ["+(int)pdf.getWeightedCredits()+" CP]"+
+	      					 "\n Anzahl unbenotete FŠcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" ["+(int)pdf.getUnweightedCredits()+" CP]"+
+	      					 "\n Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
+      						 "\n Credit Points: "+(int)pdf.getCredits()+
       						 "\n Note: "+pdf.getFinalGrade()+
       						 "\n Abschlussarbeit starten: "+pdf.getStartThesis()+
       						 "\n Studium Geschafft in Prozent... ");

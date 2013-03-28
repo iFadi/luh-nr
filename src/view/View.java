@@ -1,12 +1,8 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -17,30 +13,23 @@ import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
-import javax.swing.SpringLayout;
-import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import net.iharder.dnd.FileDrop;
 
 import model.ParsePDF;
 import model.UpdateNotifier;
+import model.Version;
+import net.iharder.dnd.FileDrop;
 
 /**
- * 
- * View.java
- * 
+ * $Id$
+ * $LastChangedDate$
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.2.1  10/11/2012
- * @copyright 2012
+ * @version $Revision$
+ * @copyright $Date$
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -59,22 +48,18 @@ import model.UpdateNotifier;
  */
 public class View extends JFrame implements ActionListener, Observer {
 
-        /**
-         * 
-         */
         private static final long serialVersionUID = 6177350218996491783L;
         private JButton bug;
         private JEditorPane status;
         private String path;
         private ParsePDF pdf;
         public JProgressBar progressBar;
-        public Desktop d;
-        
+        public Desktop d;   
         private InputPanel ip;
 
-        public View(final ParsePDF pdf) throws Exception {
+        public View(final ParsePDF pdf, Version version) throws Exception {
                 this.setPdf(pdf);
-        		UpdateNotifier un = new UpdateNotifier(); // Notify if Update is available 
+        		UpdateNotifier un = new UpdateNotifier(version); // Notify if Update is available 
 
                 this.setTitle("LUH Notenspiegel Rechner");
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,14 +73,14 @@ public class View extends JFrame implements ActionListener, Observer {
                 
                 this.add(panel);
                 this.pack();
-                this.setSize(310, 230);
+                this.setSize(330, 250);
                           
                 // Output
                 bug = new JButton();
                 progressBar = new JProgressBar();
                 status = new JEditorPane();
                 status.setEditable(false);
-                status.setText(" Notenspiegel einfach hier ziehen geht auch :-)\n\n LUH-NR\n Version: 1.2.0");
+                status.setText(" Notenspiegel einfach hier ziehen geht auch :-)\n\n LUH-NR\n Version: "+version.toString());
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
@@ -125,9 +110,10 @@ public class View extends JFrame implements ActionListener, Observer {
 						getStatus().setText(
 								 " "+ pdf.getSubject()+
 								 "\n " + pdf.getCertificate()+
-								 "\n Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
-	      						 "\n Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+
-	      						 "\n Credit Points: "+pdf.getCredits()+
+		      				     "\n Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+" ["+(int)pdf.getWeightedCredits()+" CP]"+
+		      					 "\n Anzahl unbenotete FŠcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" ["+(int)pdf.getUnweightedCredits()+" CP]"+
+		      					 "\n Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
+	      						 "\n Credit Points: "+(int)pdf.getCredits()+
 	      						 "\n Note: "+pdf.getFinalGrade()+
 	      						 "\n Abschlussarbeit starten: "+pdf.getStartThesis()+
 	      						 "\n Studium Geschafft in Prozent... ");

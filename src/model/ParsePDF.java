@@ -45,6 +45,7 @@ public class ParsePDF extends Observable{
         private double percent; // holds the percent value of the passed Exams.
         private String numberOfSubjects; // holds the passed number of all Subjects(rated and not rated).
         private String numberOfSubjectsWithGrade; // holds the passed number of all RATED Subjects.
+        private String numberOfSubjectsWithoutGrade;
         private String startThesis; // tells whether you are able to Start your Thesis based on the Credit Points.
         private String subject; // studied subject. i.e. B.Sc.Informatik, M.Sc.Mathematik, etc...
         private String certificate; // Tells whether Bachelor or Master.
@@ -60,6 +61,7 @@ public class ParsePDF extends Observable{
                 findPassedCourses(file);
 
                 int rankedNumberOfSubjects=0;
+                int unrankedNumberOfSubjects=0;
                 int numberOfSubjects=0;
                 
                 //Debug
@@ -91,6 +93,7 @@ public class ParsePDF extends Observable{
                                 }
                                 else { // Not Rated Exams.
                                         numberOfSubjects++;
+                                        unrankedNumberOfSubjects++;
                                         String credit = getCredit(courses, i);
                                         calculateAverageValue(null, credit, 1);
                                         
@@ -100,8 +103,6 @@ public class ParsePDF extends Observable{
                                 }
                         }
                 }
-                calculateAverageValue(null, null, 2);
-                setNumberOfSubjects(numberOfSubjects+"");
                 
                 if(getCertificate().contains("Master")) {
                 	setPercent((getCredits()/120)*100);
@@ -114,7 +115,10 @@ public class ParsePDF extends Observable{
                 		this.setStartThesis("mšglich");
                 }
               
-                setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+""); 
+                calculateAverageValue(null, null, 2);
+                setNumberOfSubjects(numberOfSubjects+"");
+                setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+"");
+                setNumberOfSubjectsWithoutGrade(unrankedNumberOfSubjects+"");
         }
         
         /**
@@ -457,6 +461,21 @@ public class ParsePDF extends Observable{
 		 */
 		public void setUnweightedCredits(double unweightedCredits) {
 			this.unweightedCredits = unweightedCredits;
+		}
+
+		/**
+		 * @return the numberOfSubjectsWithoutGrade
+		 */
+		public String getNumberOfSubjectsWithoutGrade() {
+			return numberOfSubjectsWithoutGrade;
+		}
+
+		/**
+		 * @param numberOfSubjectsWithoutGrade the numberOfSubjectsWithoutGrade to set
+		 */
+		public void setNumberOfSubjectsWithoutGrade(
+				String numberOfSubjectsWithoutGrade) {
+			this.numberOfSubjectsWithoutGrade = numberOfSubjectsWithoutGrade;
 		}
         
 }
