@@ -1,12 +1,12 @@
 package model;
 /**
- * $Id$
- * $LastChangedDate$
+ * $Id: Version.java 101 2013-02-09 13:22:33Z Fadi.Asbih@gmail.com $
+ * $LastChangedDate: 2013-02-09 14:22:33 +0100 (Sa, 09 Feb 2013) $
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version $Revision$
- * @copyright $Date$
+ * @version $Revision: 101 $
+ * @copyright $Date: 2013-02-09 14:22:33 +0100 (Sa, 09 Feb 2013) $
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ public class Version {
 	private int bug;
 	
 	public Version() {
-		new Version(1, 3, 0);
+		
 	}
 	
 	public Version(int major, int minor, int bug) {
