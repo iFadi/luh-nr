@@ -34,8 +34,8 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 public class ParsePDF extends Observable{
 
-        private Vector<String> courses = new Vector<String>();
-       
+        private Vector<String> courses;
+   
         private double subjectGrade;
         private double subjectCredits;
         private double weightValue;
@@ -56,7 +56,8 @@ public class ParsePDF extends Observable{
         }
         
         public void parseFile(final String file) throws Exception {
-        		courses.clear(); //If more than one PDF is parsed
+        		reset();// If more than one PDF is parsed
+        		courses = new Vector<String>();
                 setStartThesis("noch nicht mšglich");
                 findPassedCourses(file);
 
@@ -166,7 +167,7 @@ public class ParsePDF extends Observable{
         			setSubjectGrade(Double.parseDouble(mark)); // Get the Exam grade
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
         			setWeightValue(getWeightValue() + getSubjectGrade()*getSubjectCredits());
-        			setWeightCredits(getWeightedCredits()+getSubjectCredits()); // Sum of weighted Credit
+        			setWeightedCredits(getWeightedCredits()+getSubjectCredits()); // Sum of weighted Credit
         			break;
         		case 1:
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
@@ -445,7 +446,7 @@ public class ParsePDF extends Observable{
 		/**
 		 * @param weightCredits the weightCredits to set
 		 */
-		public void setWeightCredits(double weightCredits) {
+		public void setWeightedCredits(double weightCredits) {
 			this.weightedCredits = weightCredits;
 		}
 
@@ -477,5 +478,21 @@ public class ParsePDF extends Observable{
 				String numberOfSubjectsWithoutGrade) {
 			this.numberOfSubjectsWithoutGrade = numberOfSubjectsWithoutGrade;
 		}
-        
+
+		private void reset() {
+	        setSubjectGrade(0);
+	        setSubjectCredits(0);
+	        setWeightValue(0);
+	        setWeightedCredits(0); 
+	        setUnweightedCredits(0); 
+	        setCredits(0); 
+	        setPercent(0); 
+	        setNumberOfSubjects(null); 
+	        setNumberOfSubjectsWithGrade(null); 
+	        setNumberOfSubjectsWithoutGrade(null);
+	        setStartThesis(null); 
+	        setSubject(null); 
+	        setCertificate(null); 
+	        setFinalGrade(null);
+		}
 }

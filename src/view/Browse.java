@@ -55,19 +55,20 @@ public class Browse {
 //                  pdf = new ReadExcel(getPath());
                     view.getStatus().setText(
 							 " "+ pdf.getSubject()+
-							 "\n " + pdf.getCertificate()+
-	      				     "\n Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+" ["+(int)pdf.getWeightedCredits()+" CP]"+
-	      					 "\n Anzahl unbenotete FŠcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" ["+(int)pdf.getUnweightedCredits()+" CP]"+
-	      					 "\n Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
-      						 "\n Credit Points: "+(int)pdf.getCredits()+
-      						 "\n Note: "+pdf.getFinalGrade()+
-      						 "\n Abschlussarbeit starten: "+pdf.getStartThesis()+
-      						 "\n Studium Geschafft in Prozent... ");
+							 "<br> " + pdf.getCertificate()+
+	      				     "<br> Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+" ["+(int)pdf.getWeightedCredits()+" CP]"+
+	      					 "<br> Anzahl unbenotete FŠcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" ["+(int)pdf.getUnweightedCredits()+" CP]"+
+	      					 "<br> Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
+     						 "<br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
+     						 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
+     						 "<br> Abschlussarbeit starten: "+pdf.getStartThesis()+
+     						 "<br> Studium Geschafft in Prozent... ");
 //                  this.getStatus().
                     view.getStatus().setForeground(Color.black.darker());
                     view.progressBar.setIndeterminate(false);
                     view.progressBar.setValue((int)pdf.getPercent());
                     view.progressBar.setStringPainted(true);
+                    
 //                  generate.setEnabled(true);
             } catch (Exception e1) {
                     // TODO Auto-generated catch block
