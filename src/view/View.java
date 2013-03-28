@@ -1,46 +1,36 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Desktop;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
-import javax.swing.SpringLayout;
-import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import net.iharder.dnd.FileDrop;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import model.ParsePDF;
 import model.UpdateNotifier;
+import model.Version;
+import net.iharder.dnd.FileDrop;
 
 /**
- * 
- * View.java
- * 
+ * $Id$
+ * $LastChangedDate$
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.2.1  10/11/2012
- * @copyright 2012
+ * @version $Revision$
+ * @copyright $Date$
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -59,22 +49,17 @@ import model.UpdateNotifier;
  */
 public class View extends JFrame implements ActionListener, Observer {
 
-        /**
-         * 
-         */
         private static final long serialVersionUID = 6177350218996491783L;
         private JButton bug;
         private JEditorPane status;
         private String path;
         private ParsePDF pdf;
         public JProgressBar progressBar;
-        public Desktop d;
-        
         private InputPanel ip;
 
-        public View(final ParsePDF pdf) throws Exception {
+        public View(final ParsePDF pdf, Version version) throws Exception {
                 this.setPdf(pdf);
-        		UpdateNotifier un = new UpdateNotifier(); // Notify if Update is available 
+        		UpdateNotifier un = new UpdateNotifier(version); // Notify if Update is available 
 
                 this.setTitle("LUH Notenspiegel Rechner");
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,26 +79,42 @@ public class View extends JFrame implements ActionListener, Observer {
                 bug = new JButton();
                 progressBar = new JProgressBar();
                 status = new JEditorPane();
+                status.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
                 status.setEditable(false);
-                status.setText(" Notenspiegel einfach hier ziehen geht auch :-)\n\n LUH-NR\n Version: 1.2.0");
+                status.setText(" Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString());
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
                 
         		if(un.IsNewVersionAvailable()) {
-        			bug.setText("DOWNLOAD NOW"); //Download link to the new App
+        			status.setText(" Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+
+        					"<br><br> Eine neue Version ist verfügbar: "+
+        					"<a href=\"http://code.google.com/p/luh-nr/downloads/list\">DOWNLOAD</a>"); //Download link to the new App
         		}
 
+        		status.addHyperlinkListener(new HyperlinkListener() {
+        		    public void hyperlinkUpdate(HyperlinkEvent e) {
+        		        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+        		        	try {
+								Desktop.getDesktop().browse(e.getURL().toURI());
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (URISyntaxException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+        		        }
+        		    }
+        		});
+        		
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 this.setLocationRelativeTo(null);
-                this.setResizable(false);
+//                this.setResizable(false);
 
                 
                 this.setVisible(true);
                 bug.addActionListener(this);
-                
-                if(!d.isDesktopSupported())
-                        bug.setEnabled(false);
                 
                 //TESTING Drag n Drop
                 new  FileDrop(panel, new FileDrop.Listener()
@@ -124,13 +125,14 @@ public class View extends JFrame implements ActionListener, Observer {
 						pdf.parseFile(getPath());
 						getStatus().setText(
 								 " "+ pdf.getSubject()+
-								 "\n " + pdf.getCertificate()+
-								 "\n Anzahl gesamte Fächer: "+pdf.getNumberOfSubjects()+
-	      						 "\n Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+
-	      						 "\n Credit Points: "+pdf.getCredits()+
-	      						 "\n Note: "+pdf.getFinalGrade()+
-	      						 "\n Abschlussarbeit starten: "+pdf.getStartThesis()+
-	      						 "\n Studium Geschafft in Prozent... ");
+								 "<br> " + pdf.getCertificate()+
+		      				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" ["+(int)pdf.getWeightedCredits()+" CP]"+
+		      					 "<br> Anzahl unbenotete Fächer: "+pdf.getNumberOfSubjectsWithoutGrade()+" ["+(int)pdf.getUnweightedCredits()+" CP]"+
+		      					 "<br> Anzahl gesamte Fächer: "+pdf.getNumberOfSubjects()+
+	      						 "<br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
+	      						 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
+	      						 "<br> Abschlussarbeit starten: "+pdf.getStartThesis()+
+	      						 "<br> Studium Geschafft in Prozent... ");
 	                    getStatus().setForeground(Color.black.darker());
 	                    progressBar.setIndeterminate(false);
 	                    progressBar.setValue((int)pdf.getPercent());
@@ -145,29 +147,6 @@ public class View extends JFrame implements ActionListener, Observer {
                 }); // end F
         }
 
-        public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equals("Bug/Issue Report")) {
-                                try {
-                                         
-                                                URI u;
-                                                d = Desktop.getDesktop();
-                                                u = new URI("http://code.google.com/p/luh-nr/issues/list");
-                                                d.browse(u); 
-                                        
-                                } catch (URISyntaxException e1) {
-                                        // TODO Auto-generated catch block
-                                        e1.printStackTrace();
-                                        this.getStatus().setText("ERROR");
-                                        this.getStatus().setForeground(Color.red.darker());
-                                } catch (IOException e2) {
-                                        // TODO Auto-generated catch block
-                                        e2.printStackTrace();
-                                        this.getStatus().setText("ERROR");
-                                        this.getStatus().setForeground(Color.red.darker());
-                                }
-                }
-        }
-
         public String getPath() {
                 return path;
         }
@@ -180,10 +159,6 @@ public class View extends JFrame implements ActionListener, Observer {
                 return status;
         }
 
-        public void setStatus(JEditorPane status) {
-                this.status = status;
-        }
-
 		public ParsePDF getPdf() {
 			return pdf;
 		}
@@ -194,6 +169,12 @@ public class View extends JFrame implements ActionListener, Observer {
 
 		@Override
 		public void update(Observable arg0, Object arg1) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			
 		}
