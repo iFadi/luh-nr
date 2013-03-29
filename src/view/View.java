@@ -110,7 +110,7 @@ public class View extends JFrame implements ActionListener, Observer {
         		
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 this.setLocationRelativeTo(null);
-                this.setResizable(false);
+//                this.setResizable(false);
 
                 
                 this.setVisible(true);
@@ -118,25 +118,11 @@ public class View extends JFrame implements ActionListener, Observer {
                 
                 //TESTING Drag n Drop
                 new  FileDrop(panel, new FileDrop.Listener()
-                {   public void  filesDropped( java.io.File[] files )
+                {   public void  filesDropped(java.io.File[] files )
                     {   
                 	setPath(files[0].getAbsolutePath());
                 	try {
-						pdf.parseFile(getPath());
-						getStatus().setText(
-								 " "+ pdf.getSubject()+
-								 "<br> " + pdf.getCertificate()+
-		      				     "<br> Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+" ["+(int)pdf.getWeightedCredits()+" CP]"+
-		      					 "<br> Anzahl unbenotete FŠcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" ["+(int)pdf.getUnweightedCredits()+" CP]"+
-		      					 "<br> Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
-	      						 "<br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
-	      						 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
-	      						 "<br> Abschlussarbeit starten: "+pdf.getStartThesis()+
-	      						 "<br> Studium Geschafft in Prozent... ");
-	                    getStatus().setForeground(Color.black.darker());
-	                    progressBar.setIndeterminate(false);
-	                    progressBar.setValue((int)pdf.getPercent());
-	                    progressBar.setStringPainted(true);
+						output(getPath());
 					} catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -177,5 +163,24 @@ public class View extends JFrame implements ActionListener, Observer {
 		public void actionPerformed(ActionEvent arg0) {
 			// TODO Auto-generated method stub
 			
+		}
+		
+		public void output(String path) throws Exception {
+			
+			pdf.parseFile(path);
+			getStatus().setText(
+					 " "+ pdf.getSubject()+
+					 "<br> " + pdf.getCertificate()+
+  				     "<br> Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+" ["+(int)pdf.getWeightedCredits()+" CP]"+
+  					 "<br> Anzahl unbenotete FŠcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" ["+(int)pdf.getUnweightedCredits()+" CP]"+
+  					 "<br> Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
+					 "<br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
+					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
+					 "<br> Abschlussarbeit starten: "+pdf.getStartThesis()+
+					 "<br> Studium Geschafft in Prozent... ");
+            getStatus().setForeground(Color.black.darker());
+            progressBar.setIndeterminate(false);
+            progressBar.setValue((int)pdf.getPercent());
+            progressBar.setStringPainted(true);
 		}
 }
