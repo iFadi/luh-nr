@@ -34,8 +34,8 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 public class ParsePDF extends Observable{
 
-        private Vector<String> courses = new Vector<String>();
-       
+        private Vector<String> courses;
+   
         private double subjectGrade;
         private double subjectCredits;
         private double weightValue;
@@ -45,6 +45,7 @@ public class ParsePDF extends Observable{
         private double percent; // holds the percent value of the passed Exams.
         private String numberOfSubjects; // holds the passed number of all Subjects(rated and not rated).
         private String numberOfSubjectsWithGrade; // holds the passed number of all RATED Subjects.
+        private String numberOfSubjectsWithoutGrade;
         private String startThesis; // tells whether you are able to Start your Thesis based on the Credit Points.
         private String subject; // studied subject. i.e. B.Sc.Informatik, M.Sc.Mathematik, etc...
         private String certificate; // Tells whether Bachelor or Master.
@@ -55,11 +56,13 @@ public class ParsePDF extends Observable{
         }
         
         public void parseFile(final String file) throws Exception {
-        		courses.clear(); //If more than one PDF is parsed
+        		reset();// If more than one PDF is parsed
+        		courses = new Vector<String>();
                 setStartThesis("noch nicht mšglich");
                 findPassedCourses(file);
 
                 int rankedNumberOfSubjects=0;
+                int unrankedNumberOfSubjects=0;
                 int numberOfSubjects=0;
                 
                 //Debug
@@ -91,6 +94,7 @@ public class ParsePDF extends Observable{
                                 }
                                 else { // Not Rated Exams.
                                         numberOfSubjects++;
+                                        unrankedNumberOfSubjects++;
                                         String credit = getCredit(courses, i);
                                         calculateAverageValue(null, credit, 1);
                                         
@@ -100,8 +104,6 @@ public class ParsePDF extends Observable{
                                 }
                         }
                 }
-                calculateAverageValue(null, null, 2);
-                setNumberOfSubjects(numberOfSubjects+"");
                 
                 if(getCertificate().contains("Master")) {
                 	setPercent((getCredits()/120)*100);
@@ -114,7 +116,10 @@ public class ParsePDF extends Observable{
                 		this.setStartThesis("mšglich");
                 }
               
-                setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+""); 
+                calculateAverageValue(null, null, 2);
+                setNumberOfSubjects(numberOfSubjects+"");
+                setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+"");
+                setNumberOfSubjectsWithoutGrade(unrankedNumberOfSubjects+"");
         }
         
         /**
@@ -162,7 +167,7 @@ public class ParsePDF extends Observable{
         			setSubjectGrade(Double.parseDouble(mark)); // Get the Exam grade
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
         			setWeightValue(getWeightValue() + getSubjectGrade()*getSubjectCredits());
-        			setWeightCredits(getWeightedCredits()+getSubjectCredits()); // Sum of weighted Credit
+        			setWeightedCredits(getWeightedCredits()+getSubjectCredits()); // Sum of weighted Credit
         			break;
         		case 1:
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
@@ -441,7 +446,7 @@ public class ParsePDF extends Observable{
 		/**
 		 * @param weightCredits the weightCredits to set
 		 */
-		public void setWeightCredits(double weightCredits) {
+		public void setWeightedCredits(double weightCredits) {
 			this.weightedCredits = weightCredits;
 		}
 
@@ -458,5 +463,36 @@ public class ParsePDF extends Observable{
 		public void setUnweightedCredits(double unweightedCredits) {
 			this.unweightedCredits = unweightedCredits;
 		}
-        
+
+		/**
+		 * @return the numberOfSubjectsWithoutGrade
+		 */
+		public String getNumberOfSubjectsWithoutGrade() {
+			return numberOfSubjectsWithoutGrade;
+		}
+
+		/**
+		 * @param numberOfSubjectsWithoutGrade the numberOfSubjectsWithoutGrade to set
+		 */
+		public void setNumberOfSubjectsWithoutGrade(
+				String numberOfSubjectsWithoutGrade) {
+			this.numberOfSubjectsWithoutGrade = numberOfSubjectsWithoutGrade;
+		}
+
+		private void reset() {
+	        setSubjectGrade(0);
+	        setSubjectCredits(0);
+	        setWeightValue(0);
+	        setWeightedCredits(0); 
+	        setUnweightedCredits(0); 
+	        setCredits(0); 
+	        setPercent(0); 
+	        setNumberOfSubjects(null); 
+	        setNumberOfSubjectsWithGrade(null); 
+	        setNumberOfSubjectsWithoutGrade(null);
+	        setStartThesis(null); 
+	        setSubject(null); 
+	        setCertificate(null); 
+	        setFinalGrade(null);
+		}
 }

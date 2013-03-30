@@ -3,19 +3,17 @@ package view;
 import java.awt.Color;
 
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.ParsePDF;
 /**
- * 
- * Browse.java
- * 
+ * $Id$
+ * $LastChangedDate$
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version 1.2.1  10/11/2012
- * @copyright 2012
+ * @version $Revision$
+ * @copyright $Date$
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -43,41 +41,23 @@ public class Browse {
 		JFileChooser c = new JFileChooser();
         c.setMultiSelectionEnabled(false);
         c.setAcceptAllFileFilterUsed(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF", "pdf");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF-Notenspiegel", "pdf");
         c.setFileFilter(filter);
         // Demonstrate "Open" dialog:
         int rVal = c.showOpenDialog(view);
         if (rVal == JFileChooser.APPROVE_OPTION) {
-        	view.progressBar.setIndeterminate(true);
+        	view.getProgressBar().setIndeterminate(true);
             filename = c.getSelectedFile().getName();
             dir = c.getCurrentDirectory().toString();
             setPath(dir + "/" + filename);
             try {
-                    pdf.parseFile(getPath());
-//                  pdf = new ReadExcel(getPath());
-                    view.getStatus().setText(
-							 " "+ pdf.getSubject()+
-							 "\n " + pdf.getCertificate()+
-							 "\n Anzahl gesamte FŠcher: "+pdf.getNumberOfSubjects()+
-      						 "\n Anzahl benotete FŠcher: "+pdf.getNumberOfSubjectsWithGrade()+
-      						 "\n Credit Points: "+pdf.getCredits()+
-      						 "\n Note: "+pdf.getFinalGrade()+
-      						 "\n Abschlussarbeit starten: "+pdf.getStartThesis()+
-      						 "\n Studium Geschafft in Prozent... ");
-//                  this.getStatus().
-                    view.getStatus().setForeground(Color.black.darker());
-                    view.progressBar.setIndeterminate(false);
-                    view.progressBar.setValue((int)pdf.getPercent());
-                    view.progressBar.setStringPainted(true);
-//                  generate.setEnabled(true);
+            	view.output(getPath());
             } catch (Exception e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
                     view.getStatus().setText("ERROR");
                     view.getStatus().setForeground(Color.red.darker());
             }
-            // System.out.println(dir+"/"+filename);
-            
         }
 	}
 
