@@ -3,6 +3,7 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -71,14 +72,15 @@ public class View extends JFrame implements ActionListener, Observer {
                 
                 this.add(panel);
                 this.pack();
-                this.setSize(310, 230);
+                this.setMinimumSize(new Dimension(310, 230));
                           
                 // Output
                 progressBar = new JProgressBar();
                 status = new JEditorPane();
                 status.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
                 status.setEditable(false);
-                status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+"</center></p>");
+                status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()
+                		+"</center></p>");
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
@@ -179,6 +181,9 @@ public class View extends JFrame implements ActionListener, Observer {
             progressBar.setIndeterminate(false);
             progressBar.setValue((int)pdf.getPercent());
             progressBar.setStringPainted(true);
+            
+            this.setMinimumSize(new Dimension(310, 280));
+
 		}
 
 		public JProgressBar getProgressBar() {
