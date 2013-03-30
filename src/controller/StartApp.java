@@ -31,7 +31,7 @@ public class StartApp {
         
         public static void main(String[] args) throws Exception {
         	
-    		Version version = new Version(1, 3, 0); // The App Version.
+    		Version version = new Version(1, 3, 1); // The App Version.
             ParsePDF pdf = new ParsePDF(); // Call the parse Model
             View view = new View(pdf, version); // Call the View window
             pdf.addObserver(view); // interaction between Model and View.
