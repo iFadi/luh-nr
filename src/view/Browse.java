@@ -46,7 +46,7 @@ public class Browse {
         // Demonstrate "Open" dialog:
         int rVal = c.showOpenDialog(view);
         if (rVal == JFileChooser.APPROVE_OPTION) {
-        	view.progressBar.setIndeterminate(true);
+        	view.getProgressBar().setIndeterminate(true);
             filename = c.getSelectedFile().getName();
             dir = c.getCurrentDirectory().toString();
             setPath(dir + "/" + filename);

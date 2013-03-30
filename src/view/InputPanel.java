@@ -33,10 +33,7 @@ import model.ParsePDF;
  * 
  */
 public class InputPanel extends JPanel implements ActionListener {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -9017507416738367162L;
 	private JButton open;
     private JButton exit;

@@ -10,7 +10,6 @@ import java.net.URISyntaxException;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -50,11 +49,10 @@ import net.iharder.dnd.FileDrop;
 public class View extends JFrame implements ActionListener, Observer {
 
         private static final long serialVersionUID = 6177350218996491783L;
-        private JButton bug;
         private JEditorPane status;
         private String path;
         private ParsePDF pdf;
-        public JProgressBar progressBar;
+        private JProgressBar progressBar;
         private InputPanel ip;
 
         public View(final ParsePDF pdf, Version version) throws Exception {
@@ -76,20 +74,19 @@ public class View extends JFrame implements ActionListener, Observer {
                 this.setSize(310, 230);
                           
                 // Output
-                bug = new JButton();
                 progressBar = new JProgressBar();
                 status = new JEditorPane();
                 status.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
                 status.setEditable(false);
-                status.setText(" Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString());
+                status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+"</center></p>");
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
                 
         		if(un.IsNewVersionAvailable()) {
-        			status.setText(" Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+
+        			status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+
         					"<br><br> Eine neue Version ist verfügbar: "+
-        					"<a href=\"http://code.google.com/p/luh-nr/downloads/list\">DOWNLOAD</a>"); //Download link to the new App
+        					"<a href=\"http://code.google.com/p/luh-nr/downloads/list\">DOWNLOAD</a></center></p>"); //Download link to the new App
         		}
 
         		status.addHyperlinkListener(new HyperlinkListener() {
@@ -114,7 +111,6 @@ public class View extends JFrame implements ActionListener, Observer {
 
                 
                 this.setVisible(true);
-                bug.addActionListener(this);
                 
                 //TESTING Drag n Drop
                 new  FileDrop(panel, new FileDrop.Listener()
@@ -169,18 +165,27 @@ public class View extends JFrame implements ActionListener, Observer {
 			
 			pdf.parseFile(path);
 			getStatus().setText(
-					 " "+ pdf.getSubject()+
-					 "<br> " + pdf.getCertificate()+
-  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" ["+(int)pdf.getWeightedCredits()+" CP]"+
-  					 "<br> Anzahl unbenotete Fächer: "+pdf.getNumberOfSubjectsWithoutGrade()+" ["+(int)pdf.getUnweightedCredits()+" CP]"+
-  					 "<br> Anzahl gesamte Fächer: "+pdf.getNumberOfSubjects()+
-					 "<br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
+					 "<div style='margin-left:2px;'><center>"+ pdf.getSubject()+
+					 "<br> <i>" + pdf.getCertificate()+"</i></center>"+
+  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+
+  					 "<br> Anzahl unbenotete Fächer: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+
+  					 "<br> Anzahl gesamte bestandene Fächer: "+pdf.getNumberOfSubjects()+
+					 "<br><br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
 					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
-					 "<br> Abschlussarbeit starten: "+pdf.getStartThesis()+
-					 "<br> Studium Geschafft in Prozent... ");
+					 "<br><br> Abschlussarbeit starten: "+pdf.getStartThesis()+
+					 "<br> Studium Geschafft in Prozent... "+
+					 "</div>");
             getStatus().setForeground(Color.black.darker());
             progressBar.setIndeterminate(false);
             progressBar.setValue((int)pdf.getPercent());
             progressBar.setStringPainted(true);
+		}
+
+		public JProgressBar getProgressBar() {
+			return progressBar;
+		}
+
+		public void setProgressBar(JProgressBar progressBar) {
+			this.progressBar = progressBar;
 		}
 }
