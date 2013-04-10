@@ -58,7 +58,7 @@ public class ParsePDF extends Observable{
         public void parseFile(final String file) throws Exception {
         		reset();// If more than one PDF is parsed
         		courses = new Vector<String>();
-                setStartThesis("noch nicht möglich");
+                setStartThesis("noch nicht m√∂glich");
                 findPassedCourses(file);
 
                 int rankedNumberOfSubjects=0;
@@ -108,12 +108,12 @@ public class ParsePDF extends Observable{
                 if(getCertificate().contains("Master")) {
                 	setPercent((getCredits()/120)*100);
                 	if((int)getCredits() >= 75)
-                		this.setStartThesis("möglich");
+                		this.setStartThesis("m√∂glich");
                 }
                 else if(getCertificate().contains("Bachelor")) {
                 	setPercent((getCredits()/180)*100);
                 	if((int)getCredits() >= 140) 
-                		this.setStartThesis("möglich");
+                		this.setStartThesis("m√∂glich");
                 }
               
                 calculateAverageValue(null, null, 2);

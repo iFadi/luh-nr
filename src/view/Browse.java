@@ -52,11 +52,14 @@ public class Browse {
             setPath(dir + "/" + filename);
             try {
             	view.output(getPath());
-            } catch (Exception e1) {
+            } catch (Exception err) {
                     // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                    view.getStatus().setText("ERROR");
-                    view.getStatus().setForeground(Color.red.darker());
+                    err.printStackTrace();
+                    view.getStatus().setText(
+                    		"<div style='margin-left:2px;'>"+
+                    		"<center><font color=red>Hmm, irgendwo ist was schief gelaufen ...</font></center>"+
+                    		"<br><br>"+err+
+                    		"</div>");
             }
         }
 	}

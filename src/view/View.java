@@ -87,7 +87,7 @@ public class View extends JFrame implements ActionListener, Observer {
                 
         		if(un.IsNewVersionAvailable()) {
         			status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+
-        					"<br><br> Eine neue Version ist verf웗bar: "+
+        					"<br><br> Eine neue Version ist verf체gbar: "+
         					"<a href=\"http://code.google.com/p/luh-nr/downloads/list\">DOWNLOAD</a></center></p>"); //Download link to the new App
         		}
 
@@ -121,11 +121,14 @@ public class View extends JFrame implements ActionListener, Observer {
                 	setPath(files[0].getAbsolutePath());
                 	try {
 						output(getPath());
-					} catch (Exception e) {
+					} catch (Exception err) {
                         // TODO Auto-generated catch block
-                        e.printStackTrace();
-                        getStatus().setText("ERROR");
-                        getStatus().setForeground(Color.red.darker());
+                        err.printStackTrace();
+                        
+                        getStatus().setText("<div style='margin-left:2px;'>"+
+                        		"<center><font color=red>Hmm, irgendwo ist was schief gelaufen ...</font></center>"+
+                        		"<br><br>"+err+
+                        		"</div>");
 					}
                     }   // end filesDropped
                 }); // end F
@@ -169,9 +172,9 @@ public class View extends JFrame implements ActionListener, Observer {
 			getStatus().setText(
 					 "<div style='margin-left:2px;'><center>"+ pdf.getSubject()+
 					 "<br> <i>" + pdf.getCertificate()+"</i></center>"+
-  				     "<br> Anzahl benotete F둩her: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+
-  					 "<br> Anzahl unbenotete F둩her: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+
-  					 "<br> Anzahl gesamte bestandene F둩her: "+pdf.getNumberOfSubjects()+
+  				     "<br> Anzahl benotete F채cher: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+
+  					 "<br> Anzahl unbenotete F채cher: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+
+  					 "<br> Anzahl gesamte bestandene F채cher: "+pdf.getNumberOfSubjects()+
 					 "<br><br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
 					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
 					 "<br><br> Abschlussarbeit starten: "+pdf.getStartThesis()+

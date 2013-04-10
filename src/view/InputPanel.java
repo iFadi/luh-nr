@@ -51,7 +51,7 @@ public class InputPanel extends JPanel implements ActionListener {
         
         this.add(open);
         this.add(exit);
-        this.setBorder(new TitledBorder("Notenspiegel wählen: "));
+        this.setBorder(new TitledBorder("Notenspiegel w√§hlen: "));
         this.setLayout(new GridLayout(1,1));
         this.setVisible(true);
         
