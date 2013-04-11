@@ -79,8 +79,10 @@ public class View extends JFrame implements ActionListener, Observer {
                 status = new JEditorPane();
                 status.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
                 status.setEditable(false);
-                status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()
-                		+"</center></p>");
+                status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+
+//                		"<br> <a href=\"http://www.gnu.org/licenses/gpl.html\"><i>GPL v3</i></a>"+
+                		"<br><br>"+
+    					"<a href=\"http://code.google.com/p/luh-nr/issues/list\">Feedback</a></center></p>");
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
