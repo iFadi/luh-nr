@@ -55,6 +55,7 @@ public class View extends JFrame implements ActionListener, Observer {
         private ParsePDF pdf;
         private JProgressBar progressBar;
         private InputPanel ip;
+        private ExtraSubjectDialog ed;
 
         public View(final ParsePDF pdf, Version version) throws Exception {
                 this.setPdf(pdf);
@@ -79,16 +80,16 @@ public class View extends JFrame implements ActionListener, Observer {
                 status = new JEditorPane();
                 status.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
                 status.setEditable(false);
-                status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+
+                status.setText(" <p><center>Das Projekt is jetzt auf <a href=\"https://github.com/iFadi/luh-nr\">Github</a><br><br> LUH-NR<br> Version: "+version.toString()+
 //                		"<br> <a href=\"http://www.gnu.org/licenses/gpl.html\"><i>GPL v3</i></a>"+
                 		"<br><br>"+
-    					"<a href=\"http://code.google.com/p/luh-nr/issues/list\">Feedback</a></center></p>");
+    					"<a href=\"https://github.com/iFadi/luh-nr/issues\">Report Issue</a></center></p>");
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
                 
         		if(un.IsNewVersionAvailable()) {
-        			status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+
+        			status.setText(" <p><center>Das Projekt is jetzt auf <a href=\"https://github.com/iFadi/luh-nr\">Github</a><br><br> LUH-NR<br> Version: "+version.toString()+
         					"<br><br> Eine neue Version ist verfügbar: "+
         					"<a href=\"http://code.google.com/p/luh-nr/downloads/list\">DOWNLOAD</a></center></p>"); //Download link to the new App
         		}
@@ -97,7 +98,12 @@ public class View extends JFrame implements ActionListener, Observer {
         		    public void hyperlinkUpdate(HyperlinkEvent e) {
         		        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         		        	try {
-								Desktop.getDesktop().browse(e.getURL().toURI());
+        		        		if(e.getURL().toString().equals("http://fakeurl")) {
+        		        			openDialog(getPdf());
+//        		        			System.out.println(e.getURL());
+        		        		}
+        		        		else
+        		        			Desktop.getDesktop().browse(e.getURL().toURI());
 							} catch (IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -158,7 +164,24 @@ public class View extends JFrame implements ActionListener, Observer {
 
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			// TODO Auto-generated method stub
+//			pdf.parseFile(path);
+			getStatus().setText(
+					 "<div style='margin-left:2px;'><center>"+ pdf.getSubject()+
+					 "<br> <i>" + pdf.getCertificate()+"</i></center>"+
+  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+" <a href=\"http://fakeurl\">[+]</a>"+ 
+  					 "<br> Anzahl unbenotete Föcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+
+  					 "<br> Anzahl gesamte bestandene Fächer: "+pdf.getNumberOfSubjects()+
+					 "<br><br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
+					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
+					 "<br><br> Abschlussarbeit starten: "+pdf.getStartThesis()+
+					 "<br> Studium Geschafft in Prozent... "+
+					 "</div>");
+            getStatus().setForeground(Color.black.darker());
+            progressBar.setIndeterminate(false);
+            progressBar.setValue((int)pdf.getPercent());
+            progressBar.setStringPainted(true);
+            
+            this.setMinimumSize(new Dimension(310, 280));
 			
 		}
 
@@ -174,8 +197,8 @@ public class View extends JFrame implements ActionListener, Observer {
 			getStatus().setText(
 					 "<div style='margin-left:2px;'><center>"+ pdf.getSubject()+
 					 "<br> <i>" + pdf.getCertificate()+"</i></center>"+
-  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+
-  					 "<br> Anzahl unbenotete Fächer: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+
+  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+" <a href=\"http://fakeurl\">[+]</a>"+ 
+  					 "<br> Anzahl unbenotete Föcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+
   					 "<br> Anzahl gesamte bestandene Fächer: "+pdf.getNumberOfSubjects()+
 					 "<br><br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
 					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
@@ -188,7 +211,7 @@ public class View extends JFrame implements ActionListener, Observer {
             progressBar.setStringPainted(true);
             
             this.setMinimumSize(new Dimension(310, 280));
-
+            
 		}
 
 		public JProgressBar getProgressBar() {
@@ -197,5 +220,11 @@ public class View extends JFrame implements ActionListener, Observer {
 
 		public void setProgressBar(JProgressBar progressBar) {
 			this.progressBar = progressBar;
+		}
+		
+		public void openDialog(ParsePDF pdf) {
+			ed = new ExtraSubjectDialog(pdf);
+			ed.setVisible(true);
+//			System.out.println("Erfolg");
 		}
 }
