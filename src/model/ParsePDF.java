@@ -481,9 +481,9 @@ public class ParsePDF extends Observable{
 			this.numberOfSubjectsWithoutGrade = numberOfSubjectsWithoutGrade;
 		}
 
-		public void addExtraSubject(String mark, String credit) {
-			calculateAverageValue(mark, credit, 0); // Add Credit Points
-			calculateAverageValue(mark, credit, 2); // Calculate final Note
+		public void addExtraSubject(String mark, String credit, int mode) {
+			calculateAverageValue(mark, credit, mode); // Add rated Subject
+			calculateAverageValue(null, null, 2); // Calculate Note
 			loadingBar();
 			setChanged();
 			notifyObservers();

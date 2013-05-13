@@ -55,7 +55,8 @@ public class View extends JFrame implements ActionListener, Observer {
         private ParsePDF pdf;
         private JProgressBar progressBar;
         private InputPanel ip;
-        private ExtraSubjectDialog ed;
+        private RatedSubjectDialog rsd;
+        private NonRatedSubjectDialog nrsd;
 
         public View(final ParsePDF pdf, Version version) throws Exception {
                 this.setPdf(pdf);
@@ -98,8 +99,15 @@ public class View extends JFrame implements ActionListener, Observer {
         		    public void hyperlinkUpdate(HyperlinkEvent e) {
         		        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         		        	try {
-        		        		if(e.getURL().toString().equals("http://fakeurl")) {
-        		        			openDialog(getPdf());
+        		        		if(e.getURL().toString().equals("http://rated")) {
+        		        			rsd = new RatedSubjectDialog(getPdf());
+        		        			rsd.setVisible(true);
+//        		        			System.out.println(e.getURL());
+        		        		}
+        		        		else if(e.getURL().toString().equals("http://nonrated")) {
+        		        			nrsd = new NonRatedSubjectDialog(getPdf());
+        		        			nrsd.setVisible(true);
+//        		        			openDialog(getPdf());
 //        		        			System.out.println(e.getURL());
         		        		}
         		        		else
@@ -168,8 +176,8 @@ public class View extends JFrame implements ActionListener, Observer {
 			getStatus().setText(
 					 "<div style='margin-left:2px;'><center>"+ pdf.getSubject()+
 					 "<br> <i>" + pdf.getCertificate()+"</i></center>"+
-  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+" <a href=\"http://fakeurl\">[+]</a>"+ 
-  					 "<br> Anzahl unbenotete Föcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+
+  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+" <a href=\"http://rated\">[+]</a>"+ 
+  					 "<br> Anzahl unbenotete Föcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+" <a href=\"http://nonrated\">[+]</a>"+ 
   					 "<br> Anzahl gesamte bestandene Fächer: "+pdf.getNumberOfSubjects()+
 					 "<br><br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
 					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
@@ -197,8 +205,8 @@ public class View extends JFrame implements ActionListener, Observer {
 			getStatus().setText(
 					 "<div style='margin-left:2px;'><center>"+ pdf.getSubject()+
 					 "<br> <i>" + pdf.getCertificate()+"</i></center>"+
-  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+" <a href=\"http://fakeurl\">[+]</a>"+ 
-  					 "<br> Anzahl unbenotete Föcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+
+  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+" <a href=\"http://rated\">[+]</a>"+ 
+  					 "<br> Anzahl unbenotete Föcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+" <a href=\"http://nonrated\">[+]</a>"+ 
   					 "<br> Anzahl gesamte bestandene Fächer: "+pdf.getNumberOfSubjects()+
 					 "<br><br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
 					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
@@ -220,11 +228,5 @@ public class View extends JFrame implements ActionListener, Observer {
 
 		public void setProgressBar(JProgressBar progressBar) {
 			this.progressBar = progressBar;
-		}
-		
-		public void openDialog(ParsePDF pdf) {
-			ed = new ExtraSubjectDialog(pdf);
-			ed.setVisible(true);
-//			System.out.println("Erfolg");
 		}
 }

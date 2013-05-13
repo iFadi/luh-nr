@@ -14,14 +14,14 @@ import javax.swing.JTextField;
 
 import model.ParsePDF;
 
-public class ExtraSubjectDialog extends JDialog implements ActionListener {
+public class RatedSubjectDialog extends JDialog implements ActionListener {
 	private JTextField textFieldCP;
 	private JTextField textFieldNote;
 	private ParsePDF pdf;
 	/**
 	 * Create the dialog.
 	 */
-	public ExtraSubjectDialog(ParsePDF pdf) {
+	public RatedSubjectDialog(ParsePDF pdf) {
 		this.setPdf(pdf);
 		setBounds(100, 100, 300, 150);
 		getContentPane().setLayout(null);
@@ -70,7 +70,7 @@ public class ExtraSubjectDialog extends JDialog implements ActionListener {
 			dispose();
 		}
 		if(e.getActionCommand().equals("Update")) {
-			getPdf().addExtraSubject(textFieldNote.getText(), textFieldCP.getText());
+			getPdf().addExtraSubject(textFieldNote.getText(), textFieldCP.getText(),0);
 			dispose();
 		}
 	}
