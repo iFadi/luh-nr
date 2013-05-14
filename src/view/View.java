@@ -172,25 +172,12 @@ public class View extends JFrame implements ActionListener, Observer {
 
 		@Override
 		public void update(Observable arg0, Object arg1) {
-//			pdf.parseFile(path);
-			getStatus().setText(
-					 "<div style='margin-left:2px;'><center>"+ pdf.getSubject()+
-					 "<br> <i>" + pdf.getCertificate()+"</i></center>"+
-  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+" <a href=\"http://rated\">[+]</a>"+ 
-  					 "<br> Anzahl unbenotete Föcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+" <a href=\"http://nonrated\">[+]</a>"+ 
-  					 "<br> Anzahl gesamte bestandene Fächer: "+pdf.getNumberOfSubjects()+
-					 "<br><br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
-					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
-					 "<br><br> Abschlussarbeit starten: "+pdf.getStartThesis()+
-					 "<br> Studium Geschafft in Prozent... "+
-					 "</div>");
-            getStatus().setForeground(Color.black.darker());
-            progressBar.setIndeterminate(false);
-            progressBar.setValue((int)pdf.getPercent());
-            progressBar.setStringPainted(true);
-            
-            this.setMinimumSize(new Dimension(310, 280));
-			
+			try {
+				output("update");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		@Override
@@ -200,13 +187,13 @@ public class View extends JFrame implements ActionListener, Observer {
 		}
 		
 		public void output(String path) throws Exception {
-			
-			pdf.parseFile(path);
+			if (!path.equals("update"))
+				pdf.parseFile(path);
 			getStatus().setText(
 					 "<div style='margin-left:2px;'><center>"+ pdf.getSubject()+
 					 "<br> <i>" + pdf.getCertificate()+"</i></center>"+
   				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+" <a href=\"http://rated\">[+]</a>"+ 
-  					 "<br> Anzahl unbenotete Föcher: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+" <a href=\"http://nonrated\">[+]</a>"+ 
+  					 "<br> Anzahl unbenotete Fächer: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+" <a href=\"http://nonrated\">[+]</a>"+ 
   					 "<br> Anzahl gesamte bestandene Fächer: "+pdf.getNumberOfSubjects()+
 					 "<br><br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
 					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+

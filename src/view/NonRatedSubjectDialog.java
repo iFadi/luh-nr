@@ -51,6 +51,7 @@ public class NonRatedSubjectDialog extends JDialog implements ActionListener {
 		textFieldCP = new JTextField();
 		textFieldCP.setBounds(145, 8, 134, 28);
 		getContentPane().add(textFieldCP);
+		textFieldCP.setText("5");
 		textFieldCP.setColumns(10);
 	}
 

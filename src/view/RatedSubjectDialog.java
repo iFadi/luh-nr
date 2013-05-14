@@ -51,12 +51,14 @@ public class RatedSubjectDialog extends JDialog implements ActionListener {
 		
 		textFieldCP = new JTextField();
 		textFieldCP.setBounds(145, 8, 134, 28);
+		textFieldCP.setText("5");
 		getContentPane().add(textFieldCP);
 		textFieldCP.setColumns(10);
 		
 		textFieldNote = new JTextField();
 		textFieldNote.setColumns(10);
 		textFieldNote.setBounds(145, 43, 134, 28);
+		textFieldNote.setText("2.0");
 		getContentPane().add(textFieldNote);
 		
 		JLabel lblCreditPoints = new JLabel("Note");
