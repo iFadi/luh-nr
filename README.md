@@ -2,7 +2,7 @@
 Einfaches Java App um den LUH PDF-Notenspiegel aus dem [HIS-System](http://www.his.de/) zu parsen.
 
 ## Aktuelle Version
-  * 1.3.1 (30.03.2013)
+  * [1.4.0](http://luh-nr.googlecode.com/files/LUH-NR_1.4.0.jar) (14.05.2013)
 
 ## Funktionen
   * Note berechnen 
