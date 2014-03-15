@@ -2,11 +2,11 @@
 <!-- JNLP File for Notepad -->
 
 <jnlp spec="7.0+"
-      codebase="https://github.com/iFadi/luh-nr/raw/master/" 
-      href="luh-nr.jnlp">
+      codebase="https://github.com/iFadi/luh-nr" 
+      href="/raw/master/luh-nr.jnlp">
    <information>
       <title>LUH-Nr</title>
-      <vendor>The Java(tm) Tutorial: Sun Microsystems, Inc.</vendor>
+      <vendor>Fadi M. H. Asbih</vendor>
       <description>LUN-Nr</description>
       <homepage href="http://java.sun.com/docs/books/tutorial/deployment/webstart/running.html"/>
       <description kind="short">ClickMeApp uses 3 custom classes plus several
@@ -14,7 +14,7 @@
       <offline-allowed/>
    </information>
    <resources>     
-   	<jar href="luh-nr.jar"
+   	<jar href="/releases/download/1.4.0/luh-nr.jar"
 		 version="1.4.0"
 		 /> 
 	<j2se version="1.6+"
