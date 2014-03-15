@@ -2,8 +2,8 @@
 <!-- JNLP File for Notepad -->
 
 <jnlp spec="7.0+"
-      codebase="https://github.com" 
-      href="/iFadi/luh-nr/raw/master/luh-nr.jnlp">
+      codebase="http://asbih.com" 
+      href="/download/luh-nr.jnlp">
    <information>
       <title>LUH-Nr</title>
       <vendor>Fadi M. H. Asbih</vendor>
@@ -13,7 +13,7 @@
       <offline-allowed/>
    </information>
    <resources>     
-   	<jar href="/iFadi/luh-nr/releases/download/1.4.1/luh-nr.jar"/> 
+   	<jar href="/download/luh-nr.jar"/> 
 	<j2se version="1.6+"
 	      href="http://java.sun.com/products/autodl/j2se"/>
    </resources>
