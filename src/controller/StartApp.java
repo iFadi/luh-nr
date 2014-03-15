@@ -1,16 +1,12 @@
 package controller;
 
 import model.ParsePDF;
-import model.Version;
 import view.View;
 /**
- * $Id$
- * $LastChangedDate$
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version $Revision$
- * @copyright $Date$
+ * @copyright 2014
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -31,10 +27,9 @@ public class StartApp {
         
         public static void main(String[] args) throws Exception {
         	
-    		Version version = new Version(1, 3, 1); // The App Version.
-            ParsePDF pdf = new ParsePDF(); // Call the parse Model
-            View view = new View(pdf, version); // Call the View window
-            pdf.addObserver(view); // interaction between Model and View.
+        ParsePDF pdf = new ParsePDF(); // Call the parse Model
+        View view = new View(pdf); // Call the View window
+        pdf.addObserver(view); // interaction between Model and View.
                     
         }
 

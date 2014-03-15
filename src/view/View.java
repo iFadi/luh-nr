@@ -19,8 +19,6 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import model.ParsePDF;
-import model.UpdateNotifier;
-import model.Version;
 import net.iharder.dnd.FileDrop;
 
 /**
@@ -56,9 +54,8 @@ public class View extends JFrame implements ActionListener, Observer {
         private JProgressBar progressBar;
         private InputPanel ip;
 
-        public View(final ParsePDF pdf, Version version) throws Exception {
+        public View(final ParsePDF pdf) throws Exception {
                 this.setPdf(pdf);
-        		UpdateNotifier un = new UpdateNotifier(version); // Notify if Update is available 
 
                 this.setTitle("LUH Notenspiegel Rechner");
                 this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,20 +76,13 @@ public class View extends JFrame implements ActionListener, Observer {
                 status = new JEditorPane();
                 status.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
                 status.setEditable(false);
-                status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+
-//                		"<br> <a href=\"http://www.gnu.org/licenses/gpl.html\"><i>GPL v3</i></a>"+
+                status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)"+
                 		"<br><br>"+
-    					"<a href=\"http://code.google.com/p/luh-nr/issues/list\">Feedback</a></center></p>");
+    					"<a href=\"https://github.com/iFadi/luh-nr/\">Project</a></center></p>");
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
                 
-        		if(un.IsNewVersionAvailable()) {
-        			status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)<br><br> LUH-NR<br> Version: "+version.toString()+
-        					"<br><br> Eine neue Version ist verfügbar: "+
-        					"<a href=\"http://code.google.com/p/luh-nr/downloads/list\">DOWNLOAD</a></center></p>"); //Download link to the new App
-        		}
-
         		status.addHyperlinkListener(new HyperlinkListener() {
         		    public void hyperlinkUpdate(HyperlinkEvent e) {
         		        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
