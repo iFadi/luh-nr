@@ -50,6 +50,9 @@ public class ParsePDF extends Observable{
         private String subject; // studied subject. i.e. B.Sc.Informatik, M.Sc.Mathematik, etc...
         private String certificate; // Tells whether Bachelor or Master.
         private String finalGrade; // holds the Calculated note based on all passed Exams.
+        DecimalFormat df = new DecimalFormat("0.00");
+        int rankedNumberOfSubjects=0;
+        int unrankedNumberOfSubjects=0;
                 
         public ParsePDF() {
                 
@@ -60,10 +63,6 @@ public class ParsePDF extends Observable{
         		courses = new Vector<String>();
                 setStartThesis("noch nicht möglich");
                 findPassedCourses(file);
-
-                int rankedNumberOfSubjects=0;
-                int unrankedNumberOfSubjects=0;
-                int numberOfSubjects=0;
                 
                 //Debug
 //                System.out.println(getSubject() +" "+getCertificate());
@@ -78,9 +77,9 @@ public class ParsePDF extends Observable{
                                         // Get the mark of the Subject.
                                         String mark = getMark(courses, i);
                                         // Count the number of the rankedNumberOfSubjects.
-                                        rankedNumberOfSubjects++;
+//                                        rankedNumberOfSubjects++;
                                         // Count the number of the numberOfSubjects.
-                                        numberOfSubjects++;
+//                                        numberOfSubjects++;
                                         // Get the Credit Points of the Subject.
                                         String credit = getCredit(courses, i);
                                         
@@ -93,8 +92,8 @@ public class ParsePDF extends Observable{
                                         
                                 }
                                 else { // Not Rated Exams.
-                                        numberOfSubjects++;
-                                        unrankedNumberOfSubjects++;
+//                                        numberOfSubjects++;
+//                                        unrankedNumberOfSubjects++;
                                         String credit = getCredit(courses, i);
                                         calculateAverageValue(null, credit, 1);
                                         
@@ -105,23 +104,22 @@ public class ParsePDF extends Observable{
                         }
                 }
                 
-                if(getCertificate().contains("Master")) {
-                	setPercent((getCredits()/120)*100);
-                	if((int)getCredits() >= 75)
-                		this.setStartThesis("möglich");
-                }
-                else if(getCertificate().contains("Bachelor")) {
-                	setPercent((getCredits()/180)*100);
-                	if((int)getCredits() >= 140) 
-                		this.setStartThesis("möglich");
-                }
-              
+                loadingBar();
                 calculateAverageValue(null, null, 2);
-                setNumberOfSubjects(numberOfSubjects+"");
-                setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+"");
-                setNumberOfSubjectsWithoutGrade(unrankedNumberOfSubjects+"");
         }
         
+        public void loadingBar() {
+            if(getCertificate().contains("Master")) {
+            	setPercent((getCredits()/120)*100);
+            	if((int)getCredits() >= 75)
+            		this.setStartThesis("möglich");
+            }
+            else if(getCertificate().contains("Bachelor")) {
+            	setPercent((getCredits()/180)*100);
+            	if((int)getCredits() >= 140) 
+            		this.setStartThesis("möglich");
+            }
+        }
         /**
          * 
          * @param file
@@ -160,24 +158,28 @@ public class ParsePDF extends Observable{
          * mode 2: Calculate the final Grade
          */
         public void calculateAverageValue(String mark, String credit, int mode) {
-            DecimalFormat df = new DecimalFormat("0.00");
-            
+          
         	switch (mode) {
         		case 0:
         			setSubjectGrade(Double.parseDouble(mark)); // Get the Exam grade
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
         			setWeightValue(getWeightValue() + getSubjectGrade()*getSubjectCredits());
         			setWeightedCredits(getWeightedCredits()+getSubjectCredits()); // Sum of weighted Credit
+        			rankedNumberOfSubjects++; // Count
+                    setNumberOfSubjectsWithGrade(rankedNumberOfSubjects+"");
         			break;
         		case 1:
         			setSubjectCredits(Double.parseDouble(credit)); // Get the Exam credit points
         			setUnweightedCredits(getUnweightedCredits()+getSubjectCredits()); // Sum of weighted Credit
+        			unrankedNumberOfSubjects++; // Count
+                    setNumberOfSubjectsWithoutGrade(unrankedNumberOfSubjects+"");
         			break;
         		case 2:
                     setFinalGrade(df.format(getWeightValue()/getWeightedCredits())+"");
         			break;
         	}
-        	
+
+        	setNumberOfSubjects(rankedNumberOfSubjects+unrankedNumberOfSubjects+""); // Calculate the number of all subjects(rated and non-rated)
         	setCredits(getWeightedCredits()+getUnweightedCredits());
         }
         
@@ -299,7 +301,7 @@ public class ParsePDF extends Observable{
          * @return All rated passed Exams.
          */
         public String getNumberOfSubjectsWithGrade() {
-                return numberOfSubjectsWithGrade;
+            return numberOfSubjectsWithGrade;
         }
         
         /**
@@ -479,6 +481,14 @@ public class ParsePDF extends Observable{
 			this.numberOfSubjectsWithoutGrade = numberOfSubjectsWithoutGrade;
 		}
 
+		public void addExtraSubject(String mark, String credit, int mode) {
+			calculateAverageValue(mark, credit, mode); // Add rated Subject
+			calculateAverageValue(null, null, 2); // Calculate Note
+			loadingBar();
+			setChanged();
+			notifyObservers();
+		}
+		
 		private void reset() {
 	        setSubjectGrade(0);
 	        setSubjectCredits(0);

@@ -53,6 +53,8 @@ public class View extends JFrame implements ActionListener, Observer {
         private ParsePDF pdf;
         private JProgressBar progressBar;
         private InputPanel ip;
+        private RatedSubjectDialog rsd;
+        private NonRatedSubjectDialog nrsd;
 
         public View(final ParsePDF pdf) throws Exception {
                 this.setPdf(pdf);
@@ -76,18 +78,46 @@ public class View extends JFrame implements ActionListener, Observer {
                 status = new JEditorPane();
                 status.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
                 status.setEditable(false);
+<<<<<<< HEAD
                 status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)"+
                 		"<br><br>"+
     					"<a href=\"https://github.com/iFadi/luh-nr/\">Project</a></center></p>");
+=======
+                status.setText(" <p><center>Das Projekt is jetzt auf <a href=\"https://github.com/iFadi/luh-nr\">Github</a><br><br> LUH-NR<br> Version: "+version.toString()+
+//                		"<br> <a href=\"http://www.gnu.org/licenses/gpl.html\"><i>GPL v3</i></a>"+
+                		"<br><br>"+
+    					"<a href=\"https://github.com/iFadi/luh-nr/issues\">Report Issue</a></center></p>");
+>>>>>>> ff7b6da993dee49fcd7d0b7f716ba904f9ff1ac2
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
                 
+<<<<<<< HEAD
+=======
+        		if(un.IsNewVersionAvailable()) {
+        			status.setText(" <p><center>Das Projekt is jetzt auf <a href=\"https://github.com/iFadi/luh-nr\">Github</a><br><br> LUH-NR<br> Version: "+version.toString()+
+        					"<br><br> Eine neue Version ist verfügbar: "+
+        					"<a href=\"http://code.google.com/p/luh-nr/downloads/list\">DOWNLOAD</a></center></p>"); //Download link to the new App
+        		}
+
+>>>>>>> ff7b6da993dee49fcd7d0b7f716ba904f9ff1ac2
         		status.addHyperlinkListener(new HyperlinkListener() {
         		    public void hyperlinkUpdate(HyperlinkEvent e) {
         		        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
         		        	try {
-								Desktop.getDesktop().browse(e.getURL().toURI());
+        		        		if(e.getURL().toString().equals("http://rated")) {
+        		        			rsd = new RatedSubjectDialog(getPdf());
+        		        			rsd.setVisible(true);
+//        		        			System.out.println(e.getURL());
+        		        		}
+        		        		else if(e.getURL().toString().equals("http://nonrated")) {
+        		        			nrsd = new NonRatedSubjectDialog(getPdf());
+        		        			nrsd.setVisible(true);
+//        		        			openDialog(getPdf());
+//        		        			System.out.println(e.getURL());
+        		        		}
+        		        		else
+        		        			Desktop.getDesktop().browse(e.getURL().toURI());
 							} catch (IOException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -148,8 +178,12 @@ public class View extends JFrame implements ActionListener, Observer {
 
 		@Override
 		public void update(Observable arg0, Object arg1) {
-			// TODO Auto-generated method stub
-			
+			try {
+				output("update");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		@Override
@@ -159,13 +193,13 @@ public class View extends JFrame implements ActionListener, Observer {
 		}
 		
 		public void output(String path) throws Exception {
-			
-			pdf.parseFile(path);
+			if (!path.equals("update"))
+				pdf.parseFile(path);
 			getStatus().setText(
 					 "<div style='margin-left:2px;'><center>"+ pdf.getSubject()+
 					 "<br> <i>" + pdf.getCertificate()+"</i></center>"+
-  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+
-  					 "<br> Anzahl unbenotete Fächer: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+
+  				     "<br> Anzahl benotete Fächer: "+pdf.getNumberOfSubjectsWithGrade()+" [<i>"+(int)pdf.getWeightedCredits()+" CP</i>]"+" <a href=\"http://rated\">[+]</a>"+ 
+  					 "<br> Anzahl unbenotete Fächer: "+pdf.getNumberOfSubjectsWithoutGrade()+" [<i>"+(int)pdf.getUnweightedCredits()+" CP</i>]"+" <a href=\"http://nonrated\">[+]</a>"+ 
   					 "<br> Anzahl gesamte bestandene Fächer: "+pdf.getNumberOfSubjects()+
 					 "<br><br> Credit Points: "+"<b>"+(int)pdf.getCredits()+"</b>"+
 					 "<br> Note: "+"<b>"+pdf.getFinalGrade()+"</b>"+
@@ -178,7 +212,7 @@ public class View extends JFrame implements ActionListener, Observer {
             progressBar.setStringPainted(true);
             
             this.setMinimumSize(new Dimension(310, 280));
-
+            
 		}
 
 		public JProgressBar getProgressBar() {

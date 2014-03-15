@@ -27,9 +27,16 @@ public class StartApp {
         
         public static void main(String[] args) throws Exception {
         	
+<<<<<<< HEAD
         ParsePDF pdf = new ParsePDF(); // Call the parse Model
         View view = new View(pdf); // Call the View window
         pdf.addObserver(view); // interaction between Model and View.
+=======
+    		Version version = new Version(1, 4, 0); // The App Version.
+            ParsePDF pdf = new ParsePDF(); // Call the parse Model
+            View view = new View(pdf, version); // Call the View window
+            pdf.addObserver(view); // interaction between Model and View.
+>>>>>>> ff7b6da993dee49fcd7d0b7f716ba904f9ff1ac2
                     
         }
 
