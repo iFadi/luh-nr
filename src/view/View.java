@@ -78,29 +78,15 @@ public class View extends JFrame implements ActionListener, Observer {
                 status = new JEditorPane();
                 status.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
                 status.setEditable(false);
-<<<<<<< HEAD
+
                 status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)"+
                 		"<br><br>"+
     					"<a href=\"https://github.com/iFadi/luh-nr/\">Project</a></center></p>");
-=======
-                status.setText(" <p><center>Das Projekt is jetzt auf <a href=\"https://github.com/iFadi/luh-nr\">Github</a><br><br> LUH-NR<br> Version: "+version.toString()+
-//                		"<br> <a href=\"http://www.gnu.org/licenses/gpl.html\"><i>GPL v3</i></a>"+
-                		"<br><br>"+
-    					"<a href=\"https://github.com/iFadi/luh-nr/issues\">Report Issue</a></center></p>");
->>>>>>> ff7b6da993dee49fcd7d0b7f716ba904f9ff1ac2
+
                 status.setForeground(Color.black.darker());
                 panel.add(status);
                 panel.add(progressBar, BorderLayout.AFTER_LAST_LINE);
-                
-<<<<<<< HEAD
-=======
-        		if(un.IsNewVersionAvailable()) {
-        			status.setText(" <p><center>Das Projekt is jetzt auf <a href=\"https://github.com/iFadi/luh-nr\">Github</a><br><br> LUH-NR<br> Version: "+version.toString()+
-        					"<br><br> Eine neue Version ist verfügbar: "+
-        					"<a href=\"http://code.google.com/p/luh-nr/downloads/list\">DOWNLOAD</a></center></p>"); //Download link to the new App
-        		}
 
->>>>>>> ff7b6da993dee49fcd7d0b7f716ba904f9ff1ac2
         		status.addHyperlinkListener(new HyperlinkListener() {
         		    public void hyperlinkUpdate(HyperlinkEvent e) {
         		        if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
