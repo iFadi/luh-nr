@@ -9,13 +9,10 @@ import java.util.Vector;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
 /**
- * $Id$
- * $LastChangedDate$
  * 
  * @author Fadi M. H. Asbih
  * @email fadi_asbih@yahoo.de
- * @version $Revision$
- * @copyright $Date$
+ * @copyright 2014
  * 
  * TERMS AND CONDITIONS:
  * This program is free software: you can redistribute it and/or modify
@@ -34,11 +31,10 @@ import org.apache.pdfbox.util.PDFTextStripper;
  */
 public class ParsePDF extends Observable{
 
-        private Vector<String> courses;
-   
-        private double subjectGrade;
-        private double subjectCredits;
-        private double weightValue;
+        private Vector<String> courses; // A Container to save all person passed courses.
+        private double subjectGrade; // The Grade of a specific Subject.
+        private double subjectCredits; // The Credit Points for a specific Subject.
+        private double weightValue; //is the calculated Value of the weightCredits multiplied with Grade.
         private double weightedCredits; // holds the number of Credit Points for rated Courses.
         private double unweightedCredits; // holds the number of Credit Points for unrated Courses.
         private double credits; // holds the number of all Credit Points.
@@ -50,6 +46,7 @@ public class ParsePDF extends Observable{
         private String subject; // studied subject. i.e. B.Sc.Informatik, M.Sc.Mathematik, etc...
         private String certificate; // Tells whether Bachelor or Master.
         private String finalGrade; // holds the Calculated note based on all passed Exams.
+        
         DecimalFormat df = new DecimalFormat("0.00");
         int rankedNumberOfSubjects=0;
         int unrankedNumberOfSubjects=0;
@@ -212,6 +209,7 @@ public class ParsePDF extends Observable{
         
         /**
          * check if the Parsed lines are Exams, i.e. not titles or addresses.
+         * Here you can add new Exam Types i.e. "MA".
          * 
          * @param vector
          * @param index
@@ -348,7 +346,7 @@ public class ParsePDF extends Observable{
 
 		/**
 		 * 
-		 * @return
+		 * @return The Subject your Studing "B.Sc. Informatik"
 		 */
 		public String getSubject() {
 			return subject;
@@ -364,7 +362,7 @@ public class ParsePDF extends Observable{
 		
 		/**
 		 * 
-		 * @return certificate
+		 * @return Master or Bachelor 
 		 */
 		public String getCertificate() {
 			return certificate;
@@ -372,7 +370,7 @@ public class ParsePDF extends Observable{
 		
 		/**
 		 * 
-		 * @param certificate
+		 * @param Bachelor or Master
 		 */
 		public void setCertificate(String certificate) {
 			this.certificate = certificate;
@@ -380,7 +378,8 @@ public class ParsePDF extends Observable{
 
 		/**
 		 * 
-		 * @return status about starting the Thesis work
+		 * @return "möglich" or "nicht möglich"
+		 * i.e if 140CP reached for Bachelor or 75CP for Master
 		 */
 		public String getStartThesis() {
 			return startThesis;
@@ -388,35 +387,35 @@ public class ParsePDF extends Observable{
 
 		/**
 		 * 
-		 * @param startThesis
+		 * @param "möglich" or "nicht möglich"
 		 */
 		public void setStartThesis(String startThesis) {
 			this.startThesis = startThesis;
 		}
 
 		/**
-		 * @return the subjectGrade
+		 * @return the subjectGrade i.e. 2.3
 		 */
 		public double getSubjectGrade() {
 			return subjectGrade;
 		}
 
 		/**
-		 * @param subjectGrade the subjectGrade to set
+		 * @param subjectGrade i.e. 2.3
 		 */
 		public void setSubjectGrade(double subjectGrade) {
 			this.subjectGrade = subjectGrade;
 		}
 
 		/**
-		 * @return the subjectCredits
+		 * @return the subjectCredits i.e. 4 CP
 		 */
 		public double getSubjectCredits() {
 			return subjectCredits;
 		}
 
 		/**
-		 * @param subjectCredits the subjectCredits to set
+		 * @param subjectCredits i.e. 4 CP
 		 */
 		public void setSubjectCredits(double subjectCredits) {
 			this.subjectCredits = subjectCredits;
@@ -424,7 +423,8 @@ public class ParsePDF extends Observable{
 
 		/**
 		 * 
-		 * @return
+		 * @return weightValue
+		 * weightValue is the calculated Value of the weightCredits multiplied with Grade.
 		 */
 		public double getWeightValue() {
 			return weightValue;
@@ -439,14 +439,16 @@ public class ParsePDF extends Observable{
 		}
 
 		/**
-		 * @return the weightCredits
+		 * @return the weightCredits i.e. 4CP*3.0
+		 * The weighted Credits are calculated based on the number of Credit Point multiplied with the Grade.
 		 */
 		public double getWeightedCredits() {
 			return weightedCredits;
 		}
 
 		/**
-		 * @param weightCredits the weightCredits to set
+		 * @param weightCredits
+		 * The weighted Credits are calculated based on the number of Credit Point multiplied with the Grade.
 		 */
 		public void setWeightedCredits(double weightCredits) {
 			this.weightedCredits = weightCredits;
@@ -454,33 +456,42 @@ public class ParsePDF extends Observable{
 
 		/**
 		 * @return the unweightedCredits
+		 * The unweighted Credits are the Credit Points without a Grade.
 		 */
 		public double getUnweightedCredits() {
 			return unweightedCredits;
 		}
 
 		/**
-		 * @param unweightedCredits the unweightedCredits to set
+		 * @param unweightedCredits
+		 * The unweighted Credits are the Credit Points without a Grade.
 		 */
 		public void setUnweightedCredits(double unweightedCredits) {
 			this.unweightedCredits = unweightedCredits;
 		}
 
 		/**
-		 * @return the numberOfSubjectsWithoutGrade
+		 * @return numberOfSubjectsWithoutGrade
 		 */
 		public String getNumberOfSubjectsWithoutGrade() {
 			return numberOfSubjectsWithoutGrade;
 		}
 
 		/**
-		 * @param numberOfSubjectsWithoutGrade the numberOfSubjectsWithoutGrade to set
+		 * @param numberOfSubjectsWithoutGrade
 		 */
 		public void setNumberOfSubjectsWithoutGrade(
 				String numberOfSubjectsWithoutGrade) {
 			this.numberOfSubjectsWithoutGrade = numberOfSubjectsWithoutGrade;
 		}
 
+		/**
+		 * The ability to add extra Subjects which are not listed in the PDF File.
+		 * 
+		 * @param mark
+		 * @param credit
+		 * @param mode
+		 */
 		public void addExtraSubject(String mark, String credit, int mode) {
 			calculateAverageValue(mark, credit, mode); // Add rated Subject
 			calculateAverageValue(null, null, 2); // Calculate Note
@@ -489,6 +500,9 @@ public class ParsePDF extends Observable{
 			notifyObservers();
 		}
 		
+		/**
+		 * A reset function, if someone parses more than one PDF. Without closing and reopning the app.
+		 */
 		private void reset() {
 	        setSubjectGrade(0);
 	        setSubjectCredits(0);
