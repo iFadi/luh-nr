@@ -228,6 +228,14 @@ public class ParsePDF extends Observable{
                     	return true;
                 if(vector.elementAt(index).indexOf("BA") > -1)
                 		return true;
+                if(vector.elementAt(index).indexOf("MO") > -1)
+        				return true;
+        		if(vector.elementAt(index).indexOf("LN") > -1)
+        				return true;
+        		if(vector.elementAt(index).indexOf("LA") > -1)
+        				return true;
+        		if(vector.elementAt(index).indexOf("TL") > -1)
+        				return true;
                 else
                         return false;
         }
@@ -253,8 +261,18 @@ public class ParsePDF extends Observable{
          * @return Credit Points
          */
         public String getCredit(Vector<String> vector, int index) {
-                int startCreditPosition = vector.elementAt(index).indexOf("BE")+3; // Position of BE, warning if the exam title have BE, may cause parsing error!!
-                int endCreditPosition = vector.elementAt(index).indexOf("BE")+5; // Position of BE
+        		int startCreditPosition, endCreditPosition;
+        		if (subject.equals("Fach: Elektrotechnik und Informationstechnik")) {
+	        			startCreditPosition = vector.elementAt(index).indexOf("BE")+2; // Position of BE, warning if the exam title have BE, may cause parsing error!!
+	                	endCreditPosition = vector.elementAt(index).indexOf("BE")+4; // Position of BE
+	                	// if half credit points
+	                	if (vector.elementAt(index).charAt(endCreditPosition-1) == ',') {
+	            			endCreditPosition++;
+	            		}
+        		} else {
+	                	startCreditPosition = vector.elementAt(index).indexOf("BE")+3; // Position of BE, warning if the exam title have BE, may cause parsing error!!
+	                	endCreditPosition = vector.elementAt(index).indexOf("BE")+5; // Position of BE
+        		}
                 String credit = vector.elementAt(index).substring(startCreditPosition,endCreditPosition);
                 
                 return credit;
