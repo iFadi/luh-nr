@@ -24,14 +24,11 @@ import view.View;
  * 
  */
 public class StartApp {
-        
         public static void main(String[] args) throws Exception {
         	
-        ParsePDF pdf = new ParsePDF(); // Call the parse Model
-        View view = new View(pdf); // Call the View window
-        pdf.addObserver(view); // interaction between Model and View.
-
-                    
+        	ParsePDF pdf = new ParsePDF(); // Call the parse Model
+        	View view = new View(pdf); // Call the View window
+        	pdf.addObserver(view); // interaction between Model and View.
+                 
         }
-
 }
