@@ -1,7 +1,7 @@
 # LUH-NR
-Einfaches Java App um den LUH PDF-Notenspiegel aus dem [HIS-System](http://www.his.de/) zu parsen. Man kann der Notenspiegel vom Fach Informatik und E-Technik parsen!
+Einfaches Java App um den LUH PDF-Notenspiegel aus dem [HIS-System](http://www.his.de/) zu parsen.
 
-## Aktuelle Version
+## Download
   * [1.4.0](http://luh-nr.googlecode.com/files/LUH-NR_1.4.0.jar) (14.05.2013) 
   * oder einfach für die aktuelle Änderungen den master branch in Eclipse clonen!
   
