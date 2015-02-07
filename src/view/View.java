@@ -79,9 +79,9 @@ public class View extends JFrame implements ActionListener, Observer {
                 status.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
                 status.setEditable(false);
 
-                status.setText(" <p><center>Notenspiegel einfach hier ziehen geht auch :-)"+
+                status.setText(" <p><center>LUH-NR"+
                 		"<br><br>"+
-    					"<a href=\"https://github.com/iFadi/luh-nr/\">Project</a></center></p>");
+                		"Check for latest releases on <a href=\"https://github.com/iFadi/luh-nr/\">Github</a></center>.</p>");
 
                 status.setForeground(Color.black.darker());
                 panel.add(status);
