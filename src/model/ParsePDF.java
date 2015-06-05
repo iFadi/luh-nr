@@ -79,6 +79,7 @@ public class ParsePDF extends Observable{
 //                                        numberOfSubjects++;
                                         // Get the Credit Points of the Subject.
                                         String credit = getCredit(courses, i);
+                                        credit = credit.replace(",", ".");
                                         
                                         calculateAverageValue(mark, credit, 0);
                                         
@@ -238,6 +239,8 @@ public class ParsePDF extends Observable{
         				return true;
         		if(vector.elementAt(index).indexOf("TL") > -1)
         				return true;
+        		if(vector.elementAt(index).indexOf("PS") > -1)
+    				return true;
                 else
                         return false;
         }
@@ -265,16 +268,11 @@ public class ParsePDF extends Observable{
          */
         public String getCredit(Vector<String> vector, int index) {
         		int startCreditPosition, endCreditPosition;
-        		if (subject.equals("Fach: Elektrotechnik und Informationstechnik")) {
-	        			startCreditPosition = vector.elementAt(index).indexOf("BE")+2; // Position of BE, warning if the exam title have BE, may cause parsing error!!
-	                	endCreditPosition = vector.elementAt(index).indexOf("BE")+4; // Position of BE
-	                	// if half credit points
-	                	if (vector.elementAt(index).charAt(endCreditPosition-1) == ',') {
-	            			endCreditPosition++;
-	            		}
-        		} else {
-	                	startCreditPosition = vector.elementAt(index).indexOf("BE")+3; // Position of BE, warning if the exam title have BE, may cause parsing error!!
-	                	endCreditPosition = vector.elementAt(index).indexOf("BE")+5; // Position of BE
+        		startCreditPosition = vector.elementAt(index).indexOf("BE")+3; // Position of BE, warning if the exam title have BE, may cause parsing error!!
+            	endCreditPosition = vector.elementAt(index).indexOf("BE")+5; // Position of BE
+            	// if half credit points
+            	if (vector.elementAt(index).charAt(endCreditPosition-1) == ',') {
+        			endCreditPosition++;
         		}
                 String credit = vector.elementAt(index).substring(startCreditPosition,endCreditPosition);
                 
