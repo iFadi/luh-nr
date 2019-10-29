@@ -66,7 +66,7 @@ public class ParsePDF extends Observable{
                 for(int i=0; i<courses.size(); i++) { //iterate over the passed courses
                         
                         // Check if the line is an Exam.
-                        if(isExam(courses, i)) {
+                        if(!isExam(courses, i)) {
                                 
                                 // Check if the Exam is rated.
                                 if(isRated(courses, i)) {
@@ -140,7 +140,7 @@ public class ParsePDF extends Observable{
             	if(lines[i].contains("Abschluss:")) {
             		setCertificate(lines[i]);
             	}
-            	if(lines[i].contains("BE")) {
+            	if(lines[i].contains("BE") && !lines[i].contains("Status:")) {
             		courses.addElement(lines[i]);
                 }
             }
